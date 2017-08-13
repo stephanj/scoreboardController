@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+    style="@style/AppTheme">
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:layout_gravity="left|center_vertical"
+            android:background="@drawable/basket_bar"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"/>
+
+    <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView2"
+            android:src="@drawable/court_layout"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"/>
+
+    <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#c6c3c6"
+            android:minHeight="54dip"
+            android:paddingTop="4dip"
+            android:paddingLeft="2dip"
+            android:paddingRight="2dip"
+            android:id="@+id/frameLayout"
+            android:layout_below="@+id/imageView2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="17dp">
+
+        <Button
+                android:id="@+id/ok_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:minWidth="100dip"
+                android:text="Ga Verder"
+                android:onClick="startLogin"
+            android:textColor="@android:color/black" />
+    </FrameLayout>
+
+    <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/court"
+            android:spinnerMode="dialog"
+            android:layout_gravity="left|center_vertical"
+            android:layout_above="@+id/imageView2"
+            android:layout_toRightOf="@+id/textView"
+            android:layout_marginLeft="25dp"
+            android:layout_marginBottom="21dp"
+        android:visibility="visible" />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Kies"
+            android:id="@+id/textView"
+            android:layout_alignTop="@+id/court"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="50px"
+        android:textColor="@android:color/black" />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Software door Stephan Janssen"
+            android:id="@+id/textView2"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:layout_gravity="right|center_vertical"
+            android:layout_below="@+id/frameLayout"
+            android:layout_alignRight="@+id/court"
+            android:layout_alignParentRight="true"
+            android:paddingRight="20px"
+        android:textColor="@android:color/black" />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Electronica door Jan De Clerck"
+            android:id="@+id/textView3"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:layout_gravity="right|center_vertical"
+            android:layout_below="@+id/textView2"
+            android:layout_alignRight="@+id/court"
+            android:layout_alignParentRight="true"
+            android:paddingRight="20px"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="versie 19 Dec. 2014"
+        android:id="@+id/textView4"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>

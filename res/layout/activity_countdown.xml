@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <ImageView
+            android:layout_width="219dp"
+            android:layout_height="207dp"
+            android:id="@+id/imageView"
+            android:src="@drawable/clock"
+            android:layout_gravity="center"
+            android:layout_below="@+id/imageView2"
+            android:layout_alignParentLeft="true"/>
+
+    <Button
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Start Aftelklok"
+            android:id="@+id/button"
+            android:onClick="startClock"
+            android:layout_gravity="center"
+        android:layout_alignBottom="@+id/imageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="25dp"
+        android:textColor="@android:color/black" />
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView2"
+            android:layout_gravity="left|center_vertical"
+            android:background="@drawable/basket_bar"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/minuten"
+        android:layout_above="@+id/button"
+        android:layout_alignLeft="@+id/button"
+        android:numeric="integer"
+        android:layout_alignRight="@+id/button"
+        android:textColor="@android:color/black"
+        android:singleLine="true"
+        android:textStyle="normal" />
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#c6c3c6"
+        android:minHeight="54dip"
+        android:paddingTop="4dip"
+        android:paddingLeft="2dip"
+        android:paddingRight="2dip"
+        android:id="@+id/frameLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="59dp"
+        android:layout_below="@+id/imageView">
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:minWidth="100dip"
+            android:text="Start Wedstrijd"
+            android:onClick="startNewGame"
+            android:textColor="@android:color/black" />
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="(In Minuten)"
+        android:id="@+id/textView"
+        android:layout_alignBottom="@+id/minuten"
+        android:layout_toRightOf="@+id/minuten"
+        android:layout_marginLeft="22dp"
+        android:textColor="@android:color/black" />
+
+</RelativeLayout>

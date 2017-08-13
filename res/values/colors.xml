@@ -1,0 +1,5 @@
+
+<resources>
+    <color name="background">#ffffff</color>
+    <color name="fullscreen_control_overlay_color">#66000000</color>
+</resources>

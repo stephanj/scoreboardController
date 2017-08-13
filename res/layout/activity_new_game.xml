@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+    style="@style/AppTheme">
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/teamA"
+            android:layout_alignTop="@+id/textView"
+            android:layout_alignLeft="@+id/teamB"
+        android:textColor="@android:color/black" />
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/teamB"
+            android:layout_marginLeft="38dp"
+            android:layout_alignTop="@+id/textView2"
+            android:layout_toRightOf="@+id/textView2"
+        android:textColor="@android:color/black" />
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Thuis Ploeg"
+            android:id="@+id/textView"
+            android:layout_marginTop="21dp"
+            android:layout_below="@+id/imageView"
+            android:layout_alignRight="@+id/textView3"
+        android:textColor="@android:color/black" />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Bezoekers"
+            android:id="@+id/textView2"
+            android:layout_marginLeft="52dp"
+            android:layout_marginTop="47dp"
+            android:layout_below="@+id/teamA"
+            android:layout_alignParentLeft="true"
+        android:textColor="@android:color/black" />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Wedstrijd Type"
+            android:id="@+id/textView3"
+            android:layout_marginTop="50dp"
+            android:layout_below="@+id/teamB"
+            android:layout_alignRight="@+id/textView2"
+        android:textColor="@android:color/black" />
+
+    <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/gameType"
+            android:layout_alignTop="@+id/textView3"
+            android:spinnerMode="dialog"
+            android:layout_alignLeft="@+id/teamB"/>
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:layout_gravity="left|center_vertical"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/basket_bar"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Categorie"
+            android:id="@+id/textView4"
+            android:layout_alignTop="@+id/ageCategory"
+            android:layout_alignRight="@+id/textView3"
+        android:textColor="@android:color/black" />
+
+    <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ageCategory"
+            android:spinnerMode="dialog"
+            android:layout_marginTop="40dp"
+            android:layout_below="@+id/gameType"
+            android:layout_alignLeft="@+id/teamB"/>
+
+    <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#c6c3c6"
+            android:minHeight="54dip"
+            android:paddingTop="4dip"
+            android:paddingLeft="2dip"
+            android:paddingRight="2dip"
+            android:id="@+id/frameLayout"
+            android:layout_below="@+id/ageCategory"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="16dp">
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start"
+                android:id="@+id/button"
+                android:onClick="createNewGame"
+                android:layout_gravity="center"
+                android:layout_above="@+id/fiveminbtn"
+                android:layout_alignLeft="@+id/textView2"
+            android:textColor="@android:color/black" />
+    </FrameLayout>
+
+</RelativeLayout>

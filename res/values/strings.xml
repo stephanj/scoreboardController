@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ScoreBoard</string>
+    <string name="games">ScoreBoard</string>
+    <string name="login">ScoreBoard</string>
+
+    <string name="action_newGame">Nieuwe Wedstijd</string>
+    <string name="action_publish">Publish</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_redraw">Redraw</string>
+    <string name="action_turnoff">Turn Off</string>
+    <string name="action_about">Info</string>
+
+    <string name="start_clock">Start Klok</string>
+    <string name="stop_clock">Stop Klok</string>
+
+    <string name="roomA">Zaal A</string>
+    <string name="roomB">Zaal B</string>
+    <string name="roomC">Zaal C</string>
+
+    <!-- Message shown in progress dialog while app connects to the server -->
+    <string name="ui_activity_authenticating">Authenticeren\u2026</string>
+    <string name="ui_activity_create_new_game">Nieuwe Wedstrijd\u2026</string>
+    <string name="ui_activity_start_new_game">Start Wedstrijd\u2026</string>
+
+    <!-- AuthenticatorActivity -->
+    <string name="label">Scorebord</string>
+
+    <!-- Label above username EditText -->
+    <string name="login_activity_username_label">Gebruiker</string>
+
+    <!-- Label above password EditText -->
+    <string name="login_activity_password_label">Paswoord</string>
+
+    <!-- Button to sign in after entering username and password -->
+    <string name="login_activity_ok_button">Sign in</string>
+
+    <!-- Message shown in dialog if the username or password is invalid. -->
+    <string name="login_activity_loginfail_text_both">Gebruikersnaam of paswoord is niet correct, probeer opnieuw.</string>
+
+    <!-- Message shown in dialog if the password is invalid -->
+    <string name="login_activity_loginfail_text_pwonly">Paswoord is verkeerd, probeer opnieuw.</string>
+
+    <!-- Message shown in dialog to prompt the user for their password -->
+    <string name="login_activity_loginfail_text_pwmissing">Gelieve paswoord in te geven.</string>
+
+    <!-- Message shown if the provided account doesn't support the current activity. -->
+    <string name="login_activity_newaccount_text">Log in</string>
+
+    <string-array name="game_types">
+        <item>Basket (10 min)</item>
+        <item>Basket (4 min)</item>
+        <item>Voetbal</item>
+    </string-array>
+
+    <string-array name="age_category">
+        <item>Senioren</item>
+        <item>Cooperatief</item>
+        <item>U21 Junioren</item>
+        <item>U18 Kadetten</item>
+        <item>U16 Miniemen</item>
+        <item>U14 Pupillen</item>
+        <item>U12 Benjamins</item>
+        <item>U10 Microben</item>
+        <item>U8 Premicroben</item>
+        <item>U5 Baby Basket</item>
+    </string-array>
+
+    <string-array name="minutes">
+        <item>30 min</item>
+        <item>25 min</item>
+        <item>20 min</item>
+        <item>15 min</item>
+        <item>10 min</item>
+        <item>5 min</item>
+    </string-array>
+
+    <string-array name="courts">
+        <item>Zaal A</item>
+        <item>Zaal B</item>
+        <item>Zaal C</item>
+    </string-array>
+
+    <string name="oostkamp">KBBC Oostkamp</string>
+    <string name="personal_fouls">Persoonlijke Fouten?</string>
+    <string name="new_game_question">Wens je een nieuwe wedstrijd te starten?</string>
+    <string name="cancel_txt">Cancel</string>
+    <string name="ok_txt">Ok</string>
+</resources>
