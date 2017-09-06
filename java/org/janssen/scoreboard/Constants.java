@@ -1,20 +1,21 @@
 package org.janssen.scoreboard;
 
 /**
+ * App constants.
  * Created by stephan on 16/06/13.
  */
-public abstract class Constants {
+abstract class Constants {
 
-    public static String AUTH_TOKEN = "authToken";
-    public static String COURT = "court";
+    static String AUTH_TOKEN = "authToken";
+    static String COURT = "court";
 
-    public static String GAME = "game";
+    static String GAME = "game";
 
-    public static String MIRRORED = "mirrored";
+    static String MIRRORED = "mirrored";
 
-    public static String TEAM_A = "teamA";
-    public static String TEAM_B = "teamB";
-    public static String NAME = "name";
+    static String TEAM_A = "teamA";
+    static String TEAM_B = "teamB";
+    static String NAME = "name";
 
-    public static String ID = "id";
+    static String ID = "id";
 }

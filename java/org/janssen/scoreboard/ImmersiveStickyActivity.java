@@ -1,10 +1,10 @@
 package org.janssen.scoreboard;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
 /**
+ *
  * Created by stephan on 08/12/13.
  */
 public class ImmersiveStickyActivity extends WifiControlActivity {
@@ -13,8 +13,6 @@ public class ImmersiveStickyActivity extends WifiControlActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        setContentView(R.layout.activity_main);
 
         mDecorView = getWindow().getDecorView();
     }

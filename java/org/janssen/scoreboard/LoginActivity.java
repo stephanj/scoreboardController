@@ -1,8 +1,5 @@
 package org.janssen.scoreboard;
 
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,6 +14,7 @@ import org.janssen.scoreboard.model.Server;
 import org.janssen.scoreboard.model.types.RoomType;
 
 /**
+ * Login activity.
  * Created by stephan on 16/06/13.
  */
 public class LoginActivity extends WifiControlActivity {
@@ -35,11 +33,6 @@ public class LoginActivity extends WifiControlActivity {
      * Keep track of the login task so can cancel it if requested
      */
     private UserLoginTask mAuthTask = null;
-
-    /**
-     * Keep track of the progress dialog so we can dismiss it
-     */
-    private ProgressDialog mProgressDialog = null;
 
     private TextView mMessage;
 
@@ -67,7 +60,11 @@ public class LoginActivity extends WifiControlActivity {
         // Use the Server IP number based on selected court
         Bundle bundle = getIntent().getExtras();
         selectedCourt = (Integer)bundle.get(Constants.COURT);
-        Server.setIp(RoomType.getIpForCourt(selectedCourt));
+        if (selectedCourt != null) {
+            Server.setIp(RoomType.getIpForCourt(selectedCourt));
+        } else {
+            Server.setIp(RoomType.getIpForCourt(RoomType.ROOM_B.ordinal()));
+        }
 
         validateWifiAndServerComms();
 
@@ -75,35 +72,13 @@ public class LoginActivity extends WifiControlActivity {
         mUsername = intent.getStringExtra(PARAM_USERNAME);
         mRequestNewAccount = mUsername == null;
 
-        mMessage = (TextView) findViewById(R.id.message);
-        mUsernameEdit = (EditText) findViewById(R.id.username_edit);
-        mPasswordEdit = (EditText) findViewById(R.id.password_edit);
+        mMessage = findViewById(R.id.message);
+        mUsernameEdit = findViewById(R.id.username_edit);
+        mPasswordEdit = findViewById(R.id.password_edit);
         if (!TextUtils.isEmpty(mUsername)) {
             mUsernameEdit.setText(mUsername);
         }
         mMessage.setText(getMessage());
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id, Bundle args) {
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setMessage(getText(R.string.ui_activity_authenticating));
-        dialog.setIndeterminate(true);
-        dialog.setCancelable(true);
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-
-            public void onCancel(DialogInterface dialog) {
-                Log.i(TAG, "user cancelling authentication");
-                if (mAuthTask != null) {
-                    mAuthTask.cancel(true);
-                }
-            }
-        });
-        // We save off the progress dialog in a field so that we can dismiss
-        // it later. We can't just call dismissDialog(0) because the system
-        // can lose track of our dialog if there's an orientation change.
-        mProgressDialog = dialog;
-        return dialog;
     }
 
     /**
@@ -122,10 +97,6 @@ public class LoginActivity extends WifiControlActivity {
         if (TextUtils.isEmpty(mUsername) || TextUtils.isEmpty(mPassword)) {
             mMessage.setText(getMessage());
         } else {
-
-            // Show a progress dialog, and kick off a background task to perform the user login attempt.
-            showProgress();
-
             mAuthTask = new UserLoginTask();
             mAuthTask.execute();
         }
@@ -165,9 +136,6 @@ public class LoginActivity extends WifiControlActivity {
         // Our task is complete, so clear it out
         mAuthTask = null;
 
-        // Hide the progress dialog
-        hideProgress();
-
         if (success) {
             finishLogin(result);
         } else {
@@ -188,9 +156,6 @@ public class LoginActivity extends WifiControlActivity {
 
         // Our task is complete, so clear it out
         mAuthTask = null;
-
-        // Hide the progress dialog
-        hideProgress();
     }
 
     /**
@@ -209,28 +174,12 @@ public class LoginActivity extends WifiControlActivity {
         return null;
     }
 
-    /**
-     * Shows the progress UI for a lengthy operation.
-     */
-    private void showProgress() {
-        showDialog(0);
-    }
-
-    /**
-     * Hides the progress UI for a lengthy operation.
-     */
-    private void hideProgress() {
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-            mProgressDialog = null;
-        }
-    }
 
     /**
      * Represents an asynchronous task used to authenticate a user against the
      * SampleSync Service
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, String> {
+    private class UserLoginTask extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... params) {

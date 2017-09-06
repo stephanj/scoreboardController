@@ -1,6 +1,5 @@
 package org.janssen.scoreboard;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -8,20 +7,22 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.janssen.scoreboard.comms.NetworkUtilities;
 
-import static org.janssen.scoreboard.Constants.*;
+import static org.janssen.scoreboard.Constants.AUTH_TOKEN;
+import static org.janssen.scoreboard.Constants.COURT;
+import static org.janssen.scoreboard.Constants.GAME;
+import static org.janssen.scoreboard.Constants.MIRRORED;
 
 /**
  * Info voor nieuwe wedstrijd.
@@ -42,7 +43,7 @@ public class NewGameActivity extends WifiControlActivity {
      */
     private static final String TAG = "NewGameActivity";
 
-    private ProgressDialog progressDialog;
+    private ProgressBar progressBar;
 
     private EditText teamAEdit;
     private EditText teamBEdit;
@@ -66,15 +67,17 @@ public class NewGameActivity extends WifiControlActivity {
 
         Bundle bundle = getIntent().getExtras();
         authToken = bundle.getString(AUTH_TOKEN);
-        selectedCourt = (Integer)bundle.get(COURT);
+        selectedCourt = (Integer) bundle.get(COURT);
 
-        teamAEdit = (EditText) findViewById(R.id.teamA);
+        teamAEdit = findViewById(R.id.teamA);
         teamAEdit.setText(R.string.oostkamp);
-        teamBEdit = (EditText) findViewById(R.id.teamB);
-        teamBEdit.setText("Bezoekers");
+        teamBEdit = findViewById(R.id.teamB);
+        teamBEdit.setText(R.string.bezoekers);
+
+        progressBar = findViewById(R.id.progressBar3);
 
         // Game Type
-        Spinner gameTypeSpinner = (Spinner) findViewById(R.id.gameType);
+        Spinner gameTypeSpinner = findViewById(R.id.gameType);
         ArrayAdapter<CharSequence> adapterGameTypeSpinner
                 = ArrayAdapter.createFromResource(this, R.array.game_types, android.R.layout.simple_spinner_item);
         adapterGameTypeSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -93,7 +96,7 @@ public class NewGameActivity extends WifiControlActivity {
         });
 
         // Age Category
-        Spinner ageCategorySpinner = (Spinner) findViewById(R.id.ageCategory);
+        Spinner ageCategorySpinner = findViewById(R.id.ageCategory);
         ArrayAdapter<CharSequence> adapterAgeCategorySpinner
                 = ArrayAdapter.createFromResource(this, R.array.age_category, android.R.layout.simple_spinner_item);
         adapterAgeCategorySpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -110,29 +113,6 @@ public class NewGameActivity extends WifiControlActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id, Bundle args) {
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setMessage(getText(R.string.ui_activity_create_new_game));
-        dialog.setIndeterminate(true);
-        dialog.setCancelable(true);
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-
-            public void onCancel(DialogInterface dialog) {
-                Log.i(TAG, "user cancelling new game creation");
-                if (newGameTask != null) {
-                    newGameTask.cancel(true);
-                }
-            }
-        });
-        // We save off the progress dialog in a field so that we can dismiss
-        // it later. We can't just call dismissDialog(0) because the system
-        // can lose track of our dialog if there's an orientation change.
-        progressDialog = dialog;
-
-        return dialog;
     }
 
     public void createNewGame(View view) {
@@ -174,7 +154,7 @@ public class NewGameActivity extends WifiControlActivity {
         mirroring = isMirrored;
 
         // Show a progress dialog, and kick off a background task to perform the new game attempt
-        showProgress();
+        progressBar.setVisibility(View.VISIBLE);
 
         newGameTask = new NewGameTask();
         newGameTask.execute();
@@ -184,7 +164,7 @@ public class NewGameActivity extends WifiControlActivity {
      * Called when the new game creation process completes.
      */
     public void onNewGameResult(String result) {
-        hideProgress();
+        progressBar.setVisibility(View.INVISIBLE);
 
         // Show count down
         Intent intent = new Intent(getApplicationContext(), CountDownActivity.class);
@@ -195,22 +175,6 @@ public class NewGameActivity extends WifiControlActivity {
         startActivity(intent);
     }
 
-    /**
-     * Shows the progress UI for a lengthy operation.
-     */
-    private void showProgress() {
-        showDialog(0);
-    }
-
-    /**
-     * Hides the progress UI for a lengthy operation.
-     */
-    private void hideProgress() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-            progressDialog = null;
-        }
-    }
 
     public void onNewGameCancel() {
         Log.i(TAG, "onGamesListCancel()");
@@ -219,14 +183,14 @@ public class NewGameActivity extends WifiControlActivity {
         newGameTask = null;
 
         // Hide the progress dialog
-        hideProgress();
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     /**
      * Represents an asynchronous task used to authenticate a user against the
      * SampleSync Service
      */
-    public class NewGameTask extends AsyncTask<Void, Void, String> {
+    private class NewGameTask extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... params) {

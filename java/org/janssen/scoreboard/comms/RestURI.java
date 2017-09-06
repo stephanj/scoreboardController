@@ -1,9 +1,11 @@
 package org.janssen.scoreboard.comms;
 
 /**
+ * The valid REST URI's which communicate with the server side score board.
+ *
  * Created by stephan on 16/06/13.
  */
-public enum RestURI {
+enum RestURI {
 
     // Ping
     PING("http://%s"),
@@ -14,11 +16,6 @@ public enum RestURI {
     // Games
     CREATE_GAME("http://%s/api/game?teamA=%s&teamB=%s&type=%d&age=%d&court=%s&mirrored=%s&token=%s"),
     START_GAME("http://%s/api/game/start?token=%s&gameId=%d&mirrored=%s"),
-    LIST_GAMES("http://%s/api/game/list?token=%s"),
-    GET_GAME("http://%s/api/game/%d"),
-    DELETE_GAME("http://%s/api/game/%d?token=%s"),
-
-    // Teams
 
     // Score
     INC_SCORE("http://%s/api/score/inc/%d?points=%d&token=%s"),
@@ -44,11 +41,7 @@ public enum RestURI {
     DEC_CLOCK("http://%s/api/clock/dec/%d?token=%s&seconds=%d"),
 
     // Clock countdown
-    COUNTDOWN("http://%s/api/clock/countdown/%d?mirrored=%s&token=%s"),
-
-    // UTIL
-    REDRAW("http://%s/api/util/redraw/%d?token=%s"),
-    TURN_OFF("http://%s/api/util/turnoff?token=%s");
+    COUNTDOWN("http://%s/api/clock/countdown/%d?mirrored=%s&token=%s");
 
     String value;
 

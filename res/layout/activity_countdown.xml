@@ -12,41 +12,43 @@
             android:src="@drawable/clock"
             android:layout_gravity="center"
             android:layout_below="@+id/imageView2"
-            android:layout_alignParentLeft="true"/>
+            android:layout_alignParentStart="true"
+            android:contentDescription="@string/clock" />
 
     <Button
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="Start Aftelklok"
+            android:text="@string/start_aftelklok"
             android:id="@+id/button"
             android:onClick="startClock"
             android:layout_gravity="center"
-        android:layout_alignBottom="@+id/imageView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="25dp"
-        android:textColor="@android:color/black" />
+            android:layout_alignBottom="@+id/imageView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="25dp"
+            android:textColor="@android:color/black" />
 
     <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageView2"
-            android:layout_gravity="left|center_vertical"
+            android:layout_gravity="start|center_vertical"
             android:background="@drawable/basket_bar"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"/>
+            android:layout_alignParentStart="true"
+            android:contentDescription="@string/headerimage" />
 
     <EditText
+        android:id="@+id/minuten"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/minuten"
         android:layout_above="@+id/button"
-        android:layout_alignLeft="@+id/button"
-        android:numeric="integer"
-        android:layout_alignRight="@+id/button"
+        android:layout_alignEnd="@+id/button"
+        android:layout_alignStart="@+id/button"
+        android:ems="10"
+        android:hint="@string/in_minuten"
+        android:inputType="number"
+        android:maxLines="1"
         android:textColor="@android:color/black"
-        android:singleLine="true"
         android:textStyle="normal" />
 
     <FrameLayout
@@ -58,7 +60,7 @@
         android:paddingLeft="2dip"
         android:paddingRight="2dip"
         android:id="@+id/frameLayout"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_marginTop="59dp"
         android:layout_below="@+id/imageView">
 
@@ -68,20 +70,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:minWidth="100dip"
-            android:text="Start Wedstrijd"
+            android:text="@string/start_wedstrijd"
             android:onClick="startNewGame"
             android:textColor="@android:color/black" />
     </FrameLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="(In Minuten)"
-        android:id="@+id/textView"
-        android:layout_alignBottom="@+id/minuten"
-        android:layout_toRightOf="@+id/minuten"
-        android:layout_marginLeft="22dp"
-        android:textColor="@android:color/black" />
 
 </RelativeLayout>

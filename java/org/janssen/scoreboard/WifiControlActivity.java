@@ -10,11 +10,9 @@ import android.support.v4.app.FragmentActivity;
 import org.janssen.scoreboard.comms.NetworkUtilities;
 import org.janssen.scoreboard.model.Server;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 /**
+ * The Wifi controller.
+ *
  * Created by stephan on 25/01/14.
  */
 public class WifiControlActivity extends FragmentActivity {
@@ -22,38 +20,40 @@ public class WifiControlActivity extends FragmentActivity {
     public static final String SCORE = "score";     // Part of the SSID name needed by the app to work
 
     public void validateWifi() {
-        final WifiManager wifi = (WifiManager) getSystemService(WIFI_SERVICE);
+        final WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
 
-        if (wifi != null && !wifi.isWifiEnabled()) {
-            AlertDialog dialog = new AlertDialog.Builder(this).create();
-            dialog.setTitle("Waarschuwing");
-            dialog.setMessage("Gelieve eerst de WIFI aan te zetten!");
-            dialog.setCancelable(false);
-            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int buttonId) {
-                    //
-                }
-            });
-            dialog.setIcon(android.R.drawable.ic_dialog_alert);
-            dialog.show();
-            return;
-        }
+        if (wifi != null) {
+            if (!wifi.isWifiEnabled()) {
+                AlertDialog dialog = new AlertDialog.Builder(this).create();
+                dialog.setTitle(getString(R.string.waarschuwing));
+                dialog.setMessage(getString(R.string.zetWifiAan));
+                dialog.setCancelable(false);
+                dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int buttonId) {
+                        //
+                    }
+                });
+                dialog.setIcon(android.R.drawable.ic_dialog_alert);
+                dialog.show();
+                return;
+            }
 
-        WifiInfo connectionInfo = wifi.getConnectionInfo();
+            WifiInfo connectionInfo = wifi.getConnectionInfo();
 
-        if (connectionInfo != null &&
+            if (connectionInfo != null &&
                 !connectionInfo.getSSID().toLowerCase().contains(SCORE)) {
-            AlertDialog dialog = new AlertDialog.Builder(this).create();
-            dialog.setTitle("Waarschuwing");
-            dialog.setMessage("Verkeerde WIFI hotspot gekozen, gelieve 'scorebord B' te kiezen in tablet wifi menu");
-            dialog.setCancelable(false);
-            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int buttonId) {
-                    //
-                }
-            });
-            dialog.setIcon(android.R.drawable.ic_dialog_alert);
-            dialog.show();
+                AlertDialog dialog = new AlertDialog.Builder(this).create();
+                dialog.setTitle(getString(R.string.waarschuwing));
+                dialog.setMessage(getString(R.string.verkeerdeWifi));
+                dialog.setCancelable(false);
+                dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int buttonId) {
+                        //
+                    }
+                });
+                dialog.setIcon(android.R.drawable.ic_dialog_alert);
+                dialog.show();
+            }
         }
     }
 
@@ -70,10 +70,10 @@ public class WifiControlActivity extends FragmentActivity {
         if (result == null ||
             !result.equalsIgnoreCase("OK")) {
             AlertDialog dialog = new AlertDialog.Builder(this).create();
-            dialog.setTitle("ERROR");
-            dialog.setMessage("Geen communicatie met scorebord op plein " + Server.getCourt() + "\nHerstart scorebord of contacteer Jan De Clerck (0495/429553)");
+            dialog.setTitle(getString(R.string.error));
+            dialog.setMessage(getString(R.string.geenComms) + Server.getCourt() + getString(R.string.herstart));
             dialog.setCancelable(false);
-            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Ok", new DialogInterface.OnClickListener() {
+            dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int buttonId) {
                     //
                 }
@@ -87,7 +87,7 @@ public class WifiControlActivity extends FragmentActivity {
      * Represents an asynchronous task used to authenticate a user against the
      * SampleSync Service
      */
-    class PingServerTask extends AsyncTask<Void, Void, String> {
+    private class PingServerTask extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... params) {

@@ -28,8 +28,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageView"
-            android:layout_gravity="left|center_vertical"
-            android:background="@drawable/basket_bar"/>
+            android:layout_gravity="start|center_vertical"
+            android:background="@drawable/basket_bar"
+            android:contentDescription="@string/headerimage" />
 
     <ScrollView
             android:layout_width="fill_parent"
@@ -38,7 +39,6 @@
         <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:orientation="vertical"
                 android:paddingTop="5dip"
                 android:paddingBottom="13dip"
@@ -50,24 +50,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dip" />
-            <TextView
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textStyle="bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Gebruiker"
-                    android:id="@id/username"
-                android:textColor="@android:color/black" />
+
             <EditText
-                    android:id="@+id/username_edit"
-                    android:singleLine="true"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:minWidth="250dip"
-                    android:scrollHorizontally="true"
-                    android:capitalize="none"
-                    android:autoText="false"
-                    android:inputType="textEmailAddress"
+                android:id="@+id/username_edit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="gebruikersnaam"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:minWidth="250dip"
+                android:scrollHorizontally="true"
                 android:textColor="@android:color/black" />
             <TextView
                     android:id="@+id/username_fixed"
@@ -76,27 +68,16 @@
                     android:layout_marginTop="2dip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-            <TextView
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textStyle="bold"
-                    android:singleLine="true"
-                    android:layout_marginTop="2dip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Paswoord"
-                    android:id="@id/password"
-                android:textColor="@android:color/black" />
+
             <EditText
-                    android:id="@+id/password_edit"
-                    android:singleLine="true"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:minWidth="250dip"
-                    android:scrollHorizontally="true"
-                    android:capitalize="none"
-                    android:autoText="false"
-                    android:password="true"
-                    android:inputType="textPassword"
+                android:id="@+id/password_edit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="Paswoord"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:minWidth="250dip"
+                android:scrollHorizontally="true"
                 android:textColor="@android:color/black" />
             <TextView
                     android:id="@+id/message_bottom"
@@ -122,16 +103,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:minWidth="100dip"
-                android:text="Login"
+                android:text="@string/login"
                 android:onClick="handleLogin"
             android:textColor="@android:color/black" />
     </FrameLayout>
-
-    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-    </RadioGroup>
 
 </LinearLayout>

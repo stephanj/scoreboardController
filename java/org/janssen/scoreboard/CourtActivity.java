@@ -1,27 +1,20 @@
 package org.janssen.scoreboard;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import org.janssen.scoreboard.model.Server;
-import org.janssen.scoreboard.model.types.RoomType;
 
 /**
+ * Court activity.
+ *
  * Created by stephan on 18/08/13.
  */
-public class CourtActivity extends WifiControlActivity {
+class CourtActivity extends WifiControlActivity {
 
     private int selectedCourt;
 
@@ -35,7 +28,7 @@ public class CourtActivity extends WifiControlActivity {
 
         validateWifi();
 
-        Spinner courtsSpinner = (Spinner) findViewById(R.id.court);
+        Spinner courtsSpinner = findViewById(R.id.court);
         courtsSpinner.setSelection(0);
 
         ArrayAdapter<CharSequence> adapterMinutesSpinner

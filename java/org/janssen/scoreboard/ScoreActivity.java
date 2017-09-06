@@ -110,13 +110,13 @@ public class ScoreActivity extends ImmersiveStickyActivity {
                         JSONObject jsonTeamA = (JSONObject)game.get(TEAM_A);
                         JSONObject jsonTeamB = (JSONObject)game.get(TEAM_B);
 
-                        homeTeam = (TextView) findViewById(R.id.homeTeam);
+                        homeTeam = findViewById(R.id.homeTeam);
                         teamAName = (String)jsonTeamA.get(NAME);
-                        homeTeam.setText(teamAName + " 0");
+                        homeTeam.setText(String.format("%s 0", teamAName));
 
-                        visitorsTeam = (TextView) findViewById(R.id.visitorsTeam);
+                        visitorsTeam = findViewById(R.id.visitorsTeam);
                         teamBName = (String)jsonTeamB.get(NAME);
-                        visitorsTeam.setText(teamBName + " 0");
+                        visitorsTeam.setText(String.format("%s 0", teamBName));
 
                         gameId = game.getInt(ID);
                         Server.setGameId(gameId);
@@ -263,7 +263,7 @@ public class ScoreActivity extends ImmersiveStickyActivity {
             }
         };
 
-        Button newGameBtn = (Button) findViewById(R.id.newGame);
+        Button newGameBtn = findViewById(R.id.newGame);
         newGameBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -272,58 +272,58 @@ public class ScoreActivity extends ImmersiveStickyActivity {
         });
 
         // Team A
-        scoreA1 = (ImageButton) findViewById(R.id.scoreA1);
+        scoreA1 = findViewById(R.id.scoreA1);
         scoreA1.setOnTouchListener(onTouchListener);
 
-        scoreA2 = (ImageButton) findViewById(R.id.scoreA2);
+        scoreA2 = findViewById(R.id.scoreA2);
         scoreA2.setOnTouchListener(onTouchListener);
 
-        scoreA3 = (ImageButton) findViewById(R.id.scoreA3);
+        scoreA3 = findViewById(R.id.scoreA3);
         scoreA3.setOnTouchListener(onTouchListener);
 
         // Team B
-        scoreB1 = (ImageButton) findViewById(R.id.scoreB1);
+        scoreB1 = findViewById(R.id.scoreB1);
         scoreB1.setOnTouchListener(onTouchListener);
 
-        scoreB2 = (ImageButton) findViewById(R.id.scoreB2);
+        scoreB2 = findViewById(R.id.scoreB2);
         scoreB2.setOnTouchListener(onTouchListener);
 
-        scoreB3 = (ImageButton) findViewById(R.id.scoreB3);
+        scoreB3 = findViewById(R.id.scoreB3);
         scoreB3.setOnTouchListener(onTouchListener);
 
         // Fouls
-        foulA = (ImageButton) findViewById(R.id.foulA);
+        foulA = findViewById(R.id.foulA);
         foulA.setOnTouchListener(onTouchListener);
 
-        foulB = (ImageButton) findViewById(R.id.foulB);
+        foulB = findViewById(R.id.foulB);
         foulB.setOnTouchListener(onTouchListener);
 
         // Quarter
-        quarterBtn = (ImageButton) findViewById(R.id.quarterBtn);
+        quarterBtn = findViewById(R.id.quarterBtn);
         quarterBtn.setOnTouchListener(onTouchListener);
 
         // Timeout buttons
-        homeTimeoutBtn = (ImageButton) findViewById(R.id.homeTimeoutButton);
+        homeTimeoutBtn = findViewById(R.id.homeTimeoutButton);
         homeTimeoutBtn.setOnTouchListener(onTouchListener);
 
-        visitorsTimeoutBtn = (ImageButton) findViewById(R.id.visitorsTimeoutButton);
+        visitorsTimeoutBtn = findViewById(R.id.visitorsTimeoutButton);
         visitorsTimeoutBtn.setOnTouchListener(onTouchListener);
 
         // Attention button
-        attentionBtn = (ImageButton) findViewById(R.id.attentionBtn);
+        attentionBtn = findViewById(R.id.attentionBtn);
         attentionBtn.setOnTouchListener(onTouchListener);
 
         // Time
-        timeBtn = (ImageButton) findViewById(R.id.timeButton);
+        timeBtn = findViewById(R.id.timeButton);
         timeBtn.setOnTouchListener(onTouchListener);
 
-        timeUpBtn = (ImageButton) findViewById(R.id.clockUp);
+        timeUpBtn = findViewById(R.id.clockUp);
         timeUpBtn.setOnTouchListener(onTouchListener);
 
-        timeDownBtn = (ImageButton) findViewById(R.id.clockDown);
+        timeDownBtn = findViewById(R.id.clockDown);
         timeDownBtn.setOnTouchListener(onTouchListener);
 
-        Switch switchBtn = (Switch) findViewById(R.id.switch1);
+        Switch switchBtn = findViewById(R.id.switch1);
         switchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
@@ -399,9 +399,7 @@ public class ScoreActivity extends ImmersiveStickyActivity {
             }
             toast.setGravity(Gravity.BOTTOM, 0, -200);
             toast.show();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }
@@ -424,9 +422,7 @@ public class ScoreActivity extends ImmersiveStickyActivity {
             }
             toast.setGravity(Gravity.BOTTOM, 0, -200);
             toast.show();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }
@@ -459,9 +455,7 @@ public class ScoreActivity extends ImmersiveStickyActivity {
             Toast toast= Toast.makeText(getApplicationContext(), result, result.equals(OK) ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG);
             toast.setGravity(Gravity.BOTTOM, 0, -200);
             toast.show();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }
@@ -528,7 +522,7 @@ public class ScoreActivity extends ImmersiveStickyActivity {
     /**
      * Represents an asynchronous task used to set the score
      */
-    public class ScoreTask extends AsyncTask<Void, Void, String> {
+    private class ScoreTask extends AsyncTask<Void, Void, String> {
 
         private String token;
         private int teamId;
@@ -536,11 +530,11 @@ public class ScoreActivity extends ImmersiveStickyActivity {
         private TextView textView;
         private String teamName;
 
-        public ScoreTask(final String token,
-                         final TextView textView,
-                         final String teamName,
-                         final int teamId,
-                         final int points) {
+        ScoreTask(final String token,
+                  final TextView textView,
+                  final String teamName,
+                  final int teamId,
+                  final int points) {
             this.token = token;
             this.textView = textView;
             this.teamName = teamName;
@@ -570,15 +564,15 @@ public class ScoreActivity extends ImmersiveStickyActivity {
     /**
      * Represents an asynchronous task used to set the foul
      */
-    public class FoulTask extends AsyncTask<Void, Void, String> {
+    private class FoulTask extends AsyncTask<Void, Void, String> {
 
         private String token;
         private int teamId;
         private int totalFouls;
 
-        public FoulTask(final String token,
-                        final int teamId,
-                        final int totalFouls) {
+        FoulTask(final String token,
+                 final int teamId,
+                 final int totalFouls) {
             this.token = token;
             this.teamId = teamId;
             this.totalFouls = totalFouls;
@@ -599,11 +593,11 @@ public class ScoreActivity extends ImmersiveStickyActivity {
     /**
      * Represents an asynchronous task used to set the quarters
      */
-    public class QuarterTask extends AsyncTask<Void, Void, String> {
+    private class QuarterTask extends AsyncTask<Void, Void, String> {
 
         private int gameId;
 
-        public QuarterTask(int gameId) {
+        QuarterTask(int gameId) {
             this.gameId = gameId;
         }
 
@@ -620,11 +614,11 @@ public class ScoreActivity extends ImmersiveStickyActivity {
     /**
      * Represents an asynchronous task used to set the quarters
      */
-    public class TimeoutTask extends AsyncTask<Void, Void, String> {
+    private class TimeoutTask extends AsyncTask<Void, Void, String> {
 
         private int teamId;
 
-        public TimeoutTask(int teamId) {
+        TimeoutTask(int teamId) {
             this.teamId = teamId;
         }
 
@@ -643,9 +637,9 @@ public class ScoreActivity extends ImmersiveStickyActivity {
     /**
      * Represents an asynchronous task used to set the quarters
      */
-    public class AttentionTask extends AsyncTask<Void, Void, String> {
+    private class AttentionTask extends AsyncTask<Void, Void, String> {
 
-        public AttentionTask() {
+        AttentionTask() {
         }
 
         @Override
@@ -663,22 +657,22 @@ public class ScoreActivity extends ImmersiveStickyActivity {
     /**
      * Represents an asynchronous task used to set the clock
      */
-    public class ClockTask extends AsyncTask<Void, Void, String> {
+    private class ClockTask extends AsyncTask<Void, Void, String> {
 
-        public static final String ERROR_PROBEER_OPNIEUW = "Error probeer opnieuw - ";
+        static final String ERROR_PROBEER_OPNIEUW = "Error probeer opnieuw - ";
         private String token;
         private int gameId;
         private int seconds;
         private ClockAction action;
 
-        public ClockTask(final String token, final int gameId, final ClockAction action, final int seconds) {
+        ClockTask(final String token, final int gameId, final ClockAction action, final int seconds) {
             this.token = token;
             this.gameId = gameId;
             this.action = action;
             this.seconds = seconds;
         }
 
-        public ClockTask(final String token, final int gameId, final ClockAction action) {
+        ClockTask(final String token, final int gameId, final ClockAction action) {
             this(token, gameId, action, 1);
         }
 
@@ -694,29 +688,6 @@ public class ScoreActivity extends ImmersiveStickyActivity {
             }
 
             return result;
-        }
-    }
-
-    /**
-     * Represents an asynchronous task to redraw the score board for the given game
-     */
-    public class RedrawTask extends AsyncTask<Void, Void, String> {
-
-        private int gameId;
-
-        public RedrawTask(int gameId) {
-            this.gameId = gameId;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            try {
-                return NetworkUtilities.redraw(authToken, gameId);
-            } catch (Exception ex) {
-                Log.e(TAG, "RedrawTask.doInBackground: failed to set redraw");
-                Log.i(TAG, ex.toString());
-                return null;
-            }
         }
     }
 }

@@ -2,7 +2,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout android:layout_width="match_parent"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:fitsSystemWindows="true">
@@ -26,219 +27,219 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/scoreA1"
-                    android:contentDescription="button"
                     android:clickable="true"
                     android:src="@drawable/one"
-                    android:layout_marginLeft="18dp"
+                    android:layout_marginStart="18dp"
                     style="@android:style/MediaButton.Play"
                     android:layout_below="@+id/switch1"
-                    android:layout_alignParentLeft="true" />
+                    android:layout_alignParentStart="true"
+                    android:contentDescription="@string/plusonehome" />
 
             <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/scoreA2"
-                    android:contentDescription="button"
                     android:clickable="true"
                     android:src="@drawable/two"
                     style="@android:style/MediaButton.Play"
-                android:layout_centerVertical="true"
-                android:layout_alignLeft="@+id/scoreA1" />
+                    android:layout_centerVertical="true"
+                    android:layout_alignStart="@+id/scoreA1"
+                    android:contentDescription="@string/plustwohome" />
 
             <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/scoreA3"
-                    android:contentDescription="button"
                     android:clickable="true"
                     android:src="@drawable/three"
                     style="@android:style/MediaButton.Play"
-                android:layout_alignBottom="@id/clockDown"
-                android:layout_alignLeft="@+id/scoreA2" />
+                    android:layout_alignBottom="@id/clockDown"
+                    android:layout_alignStart="@+id/scoreA2"
+                    android:contentDescription="@string/plusthreehome" />
 
             <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/foulA"
-                    android:contentDescription="button"
                     android:clickable="true"
                     android:src="@drawable/foul"
                     style="@android:style/MediaButton.Play"
-                android:layout_alignTop="@+id/scoreA1"
-                android:layout_toRightOf="@+id/scoreA1"
-                android:layout_marginLeft="37dp" />
+                    android:layout_alignTop="@+id/scoreA1"
+                    android:layout_toEndOf="@+id/scoreA1"
+                    android:layout_marginStart="37dp"
+                    android:contentDescription="@string/foulhome" />
 
             <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/scoreB2"
-                    android:contentDescription="button"
                     android:clickable="true"
                     android:src="@drawable/two"
                     style="@android:style/MediaButton.Play"
-                android:layout_alignTop="@+id/scoreA2"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp" />
+                    android:layout_alignTop="@+id/scoreA2"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="@string/plustwovisitors" />
 
             <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/foulB"
-                    android:contentDescription="button"
                     android:clickable="true"
                     android:src="@drawable/foul"
                     style="@android:style/MediaButton.Play"
-                android:layout_below="@+id/visitorsTeam"
-                android:layout_toRightOf="@id/clockUp" />
+                    android:layout_below="@+id/visitorsTeam"
+                    android:layout_toEndOf="@id/clockUp"
+                    android:contentDescription="@string/foulvisitors" />
 
             <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/scoreB3"
-                    android:contentDescription="button"
                     android:clickable="true"
                     android:src="@drawable/three"
                     style="@android:style/MediaButton.Play"
-                android:layout_alignTop="@+id/scoreA3"
-                android:layout_alignLeft="@+id/scoreB2" />
+                    android:layout_alignTop="@+id/scoreA3"
+                    android:layout_alignStart="@+id/scoreB2"
+                    android:contentDescription="@string/plusthreevisitors" />
 
             <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/scoreB1"
-                    android:contentDescription="button"
                     android:clickable="true"
                     android:src="@drawable/one"
                     style="@android:style/MediaButton.Play"
-                android:layout_alignTop="@+id/quarterBtn"
-                android:layout_alignLeft="@+id/scoreB2" />
+                    android:layout_alignTop="@+id/quarterBtn"
+                    android:layout_alignStart="@+id/scoreB2"
+                    android:contentDescription="@string/plusonevisitors" />
 
             <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/timeButton"
-                    android:contentDescription="button"
                     android:clickable="true"
                     android:src="@drawable/clock"
                     style="@android:style/MediaButton.Play"
-                android:layout_alignTop="@+id/visitorsTimeoutButton"
-                android:layout_centerHorizontal="true" />
+                    android:layout_alignTop="@+id/visitorsTimeoutButton"
+                    android:layout_centerHorizontal="true"
+                    android:contentDescription="@string/clock" />
 
             <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/quarterBtn"
-                    android:contentDescription="button"
                     android:clickable="true"
                     android:src="@drawable/quarter"
                     style="@android:style/MediaButton.Play"
-                android:layout_alignTop="@+id/foulB"
-                android:layout_centerHorizontal="true" />
+                    android:layout_alignTop="@+id/foulB"
+                    android:layout_centerHorizontal="true"
+                    android:contentDescription="@string/quarter" />
 
             <Switch
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Negatief"
+                    android:text="@string/negatief"
                     android:id="@+id/switch1"
-                    android:singleLine="true"
+                    android:maxLines="1"
                     android:checked="false"
-                android:textColor="@android:color/black"
-                android:textStyle="normal"
-                android:layout_alignTop="@+id/newGame"
-                android:layout_alignLeft="@id/clockDown" />
+                    android:textColor="@android:color/black"
+                    android:textStyle="normal"
+                    android:layout_alignTop="@+id/newGame"
+                    android:layout_alignStart="@id/clockDown" />
 
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="Home team"
+                    android:text="@string/home_team"
                     android:id="@+id/homeTeam"
-                android:textStyle="bold"
-                    android:textSize="25dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignLeft="@+id/scoreA1"
-                android:textColor="@android:color/black" />
+                    android:textStyle="bold"
+                    android:textSize="25sp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignStart="@+id/scoreA1"
+                    android:textColor="@android:color/black" />
 
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="Visitors team"
+                    android:text="@string/visitors_team"
                     android:id="@+id/visitorsTeam"
                     android:textStyle="bold"
-                    android:textSize="25dp"
-                android:layout_marginRight="49dp"
-                android:layout_alignTop="@+id/homeTeam"
-                android:layout_alignParentRight="true"
-                android:textColor="@android:color/black" />
+                    android:textSize="25sp"
+                    android:layout_marginEnd="49dp"
+                    android:layout_alignTop="@+id/homeTeam"
+                    android:layout_alignParentEnd="true"
+                    android:textColor="@android:color/black" />
 
             <ImageButton
                     style="@android:style/MediaButton.Play"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@id/clockUp"
-                    android:contentDescription="button"
                     android:clickable="true"
                     android:src="@drawable/plusone"
-                android:layout_alignTop="@id/clockDown"
-                android:layout_toRightOf="@+id/timeButton" />
+                    android:layout_alignTop="@id/clockDown"
+                    android:layout_toEndOf="@+id/timeButton"
+                    android:contentDescription="@string/plustime" />
 
             <ImageButton
                     style="@android:style/MediaButton.Play"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@id/clockDown"
-                    android:contentDescription="button"
                     android:clickable="true"
                     android:src="@drawable/minusone"
-                android:layout_alignParentBottom="true"
-                android:layout_toRightOf="@+id/foulA"
-                android:layout_marginBottom="19dp" />
+                    android:layout_alignParentBottom="true"
+                    android:layout_toEndOf="@+id/foulA"
+                    android:layout_marginBottom="19dp"
+                    android:contentDescription="@string/minustime" />
 
             <ImageButton
                 style="@android:style/MediaButton.Play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/homeTimeoutButton"
-                android:contentDescription="button"
                 android:clickable="true"
                 android:src="@drawable/timeout"
                 android:layout_alignTop="@+id/scoreA2"
-                android:layout_alignLeft="@+id/foulA" />
+                android:layout_alignStart="@+id/foulA"
+                android:contentDescription="@string/hometimeout" />
 
             <ImageButton
                 style="@android:style/MediaButton.Play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/visitorsTimeoutButton"
-                android:contentDescription="button"
                 android:clickable="true"
                 android:src="@drawable/timeout"
                 android:layout_alignTop="@+id/scoreB2"
-                android:layout_alignLeft="@+id/foulB" />
+                android:layout_alignStart="@+id/foulB"
+                android:contentDescription="@string/visitorstimeout" />
 
             <ImageButton
                 style="@android:style/MediaButton.Play"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/attentionBtn"
-                android:contentDescription="button"
                 android:clickable="true"
                 android:src="@drawable/attention"
                 android:layout_alignParentBottom="true"
-                android:layout_alignLeft="@+id/quarterBtn" />
+                android:layout_alignStart="@+id/quarterBtn"
+                android:contentDescription="@string/buzzer" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Game"
+                android:text="@string/new_game"
                 android:id="@+id/newGame"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:typeface="normal"
                 style="@android:style/TextAppearance.Small"
                 android:textColor="@android:color/black"
                 android:layout_above="@+id/foulB"
-                android:layout_alignLeft="@id/clockUp" />
+                android:layout_alignStart="@id/clockUp" />
 
         </RelativeLayout>
     </FrameLayout>

@@ -2,7 +2,6 @@ package org.janssen.scoreboard.comms;
 
 import android.util.Log;
 
-
 import org.janssen.scoreboard.model.Server;
 import org.janssen.scoreboard.model.types.ClockAction;
 
@@ -34,9 +33,9 @@ final public class NetworkUtilities {
     private static final String TAG = "NetworkUtilities";
 
     /** Timeout (in ms) we specify for each http request */
-    public static final int HTTP_REQUEST_TIMEOUT_MS = 30 * 1000;
-    public static final int HTTP_REQUEST_ONE_SEC_TIMEOUT_MS = 1000;
-    public static final String OK = "OK";
+    private static final int HTTP_REQUEST_TIMEOUT_MS = 30 * 1000;
+    private static final int HTTP_REQUEST_ONE_SEC_TIMEOUT_MS = 1000;
+    private static final String OK = "OK";
 
     private NetworkUtilities() {
     }
@@ -44,7 +43,7 @@ final public class NetworkUtilities {
     /**
      * Configures the httpClient to connect to the URL provided.
      */
-    public static HttpClient getHttpClient(int timeout) {
+    private static HttpClient getHttpClient(int timeout) {
         HttpClient httpClient = new DefaultHttpClient();
         final HttpParams params = httpClient.getParams();
         HttpConnectionParams.setConnectionTimeout(params, timeout);
@@ -53,7 +52,7 @@ final public class NetworkUtilities {
         return httpClient;
     }
 
-    public static HttpClient getHttpClient() {
+    private static HttpClient getHttpClient() {
         return getHttpClient(HTTP_REQUEST_TIMEOUT_MS);
     }
 
@@ -266,13 +265,6 @@ final public class NetworkUtilities {
         }
     }
 
-    /**
-     *
-     * @param token
-     * @param teamId
-     * @return
-     * @throws IOException
-     */
     public static String incrementTimeout(final String token,
                                           final int teamId) throws IOException {
 
@@ -363,33 +355,6 @@ final public class NetworkUtilities {
             }
         } else {
             throw new IOException(resp.toString());
-        }
-    }
-
-    /**
-     * Connects to the scoreboard server and increments the score
-     *
-     * @return ok
-     */
-    public static String redraw(String authToken, int gameId) {
-        String REDRAW_URI = String.format(RestURI.REDRAW.getValue(), Server.getIp(), gameId, authToken);
-
-        final HttpPut put = new HttpPut(REDRAW_URI);
-
-        try {
-            final HttpResponse resp = getHttpClient().execute(put);
-            if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                Log.v(TAG, "Successful redraw");
-                return OK;
-            } else {
-                Log.e(TAG, "Error updating clock " + resp.getStatusLine());
-                return null;
-            }
-        } catch (final IOException e) {
-            Log.e(TAG, "IOException when redraw score board", e);
-            return null;
-        } finally {
-            Log.v(TAG, "redraw completing");
         }
     }
 

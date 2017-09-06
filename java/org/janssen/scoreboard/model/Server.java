@@ -1,6 +1,7 @@
 package org.janssen.scoreboard.model;
 
 /**
+ *
  * Created by stephan on 15/06/13.
  */
 public class Server {
@@ -23,10 +24,6 @@ public class Server {
         ip = newIp;
     }
 
-    public static String getToken() {
-        return token;
-    }
-
     public static void setToken(String token) {
         Server.token = token;
     }
@@ -37,10 +34,6 @@ public class Server {
 
     public static void setCourt(int court) {
         Server.court = court;
-    }
-
-    public static int getGameId() {
-        return gameId;
     }
 
     public static void setGameId(int gameId) {

@@ -1,28 +1,28 @@
 package org.janssen.scoreboard;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import static org.janssen.scoreboard.Constants.*;
 import org.janssen.scoreboard.comms.NetworkUtilities;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 
+import static org.janssen.scoreboard.Constants.AUTH_TOKEN;
+import static org.janssen.scoreboard.Constants.COURT;
+import static org.janssen.scoreboard.Constants.GAME;
+import static org.janssen.scoreboard.Constants.ID;
+import static org.janssen.scoreboard.Constants.MIRRORED;
+
 /**
+ * Count down activity.
  * Created by stephan on 18/08/13.
  */
 public class CountDownActivity extends WifiControlActivity {
@@ -60,7 +60,10 @@ public class CountDownActivity extends WifiControlActivity {
     }
 
     public void startClock(final View view) {
-        new ClockCountdownTask().execute();
+        EditText clockMinutesText = findViewById(R.id.minuten);
+
+        String clockMinutes = clockMinutesText.getText().toString();
+        new ClockCountdownTask().execute(clockMinutes);
     }
 
     public void showScorePage() {
@@ -74,20 +77,14 @@ public class CountDownActivity extends WifiControlActivity {
     /**
      * An asynchronous clock countdown task
      */
-    public class ClockCountdownTask extends AsyncTask<Void, Void, String> {
+    private class ClockCountdownTask extends AsyncTask<String, String, String> {
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected String doInBackground(String... args) {
             try {
-                EditText clockMinutes = (EditText) findViewById(R.id.minuten);
-
-                if (clockMinutes.getText() != null &&
-                    clockMinutes.getText().length() > 0) {
-                    String value = clockMinutes.getText().toString();
-                    if (value != null) {
-                        int minuten = Integer.parseInt(value.trim());
-                        NetworkUtilities.countDown(minuten * 60, mirrored, authToken);
-                    }
+                if (args[0] != null && args[0].length() > 0) {
+                    int minuten = Integer.parseInt(args[0].trim());
+                    NetworkUtilities.countDown(minuten * 60, mirrored, authToken);
                 }
                 return "";
             } catch (Exception ex) {
@@ -101,7 +98,7 @@ public class CountDownActivity extends WifiControlActivity {
     /**
      * An asynchronous start game task
      */
-    public class StartGameTask extends AsyncTask<Void, Void, String> {
+    private class StartGameTask extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... params) {
