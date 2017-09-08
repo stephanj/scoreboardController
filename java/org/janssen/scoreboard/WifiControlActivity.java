@@ -71,7 +71,7 @@ public class WifiControlActivity extends FragmentActivity {
             !result.equalsIgnoreCase("OK")) {
             AlertDialog dialog = new AlertDialog.Builder(this).create();
             dialog.setTitle(getString(R.string.error));
-            dialog.setMessage(getString(R.string.geenComms) + Server.getCourt() + getString(R.string.herstart));
+            dialog.setMessage(getString(R.string.geenComms) + " " + Server.getCourt() + "\n" + getString(R.string.herstart));
             dialog.setCancelable(false);
             dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int buttonId) {

@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.janssen.scoreboard.comms.NetworkUtilities;
@@ -40,6 +41,8 @@ public class LoginActivity extends WifiControlActivity {
 
     private EditText mPasswordEdit;
 
+    private ProgressBar progressBar;
+
     /**
      * Was the original caller asking for an entirely new account?
      */
@@ -72,6 +75,8 @@ public class LoginActivity extends WifiControlActivity {
         mUsername = intent.getStringExtra(PARAM_USERNAME);
         mRequestNewAccount = mUsername == null;
 
+        progressBar = findViewById(R.id.progressBar);
+
         mMessage = findViewById(R.id.message);
         mUsernameEdit = findViewById(R.id.username_edit);
         mPasswordEdit = findViewById(R.id.password_edit);
@@ -97,6 +102,7 @@ public class LoginActivity extends WifiControlActivity {
         if (TextUtils.isEmpty(mUsername) || TextUtils.isEmpty(mPassword)) {
             mMessage.setText(getMessage());
         } else {
+            progressBar.setVisibility(View.VISIBLE);
             mAuthTask = new UserLoginTask();
             mAuthTask.execute();
         }
@@ -132,6 +138,8 @@ public class LoginActivity extends WifiControlActivity {
         boolean success = (result != null &&
                            result.length() > 0) &&
                            !result.contains("Exception");
+
+        progressBar.setVisibility(View.INVISIBLE);
 
         // Our task is complete, so clear it out
         mAuthTask = null;

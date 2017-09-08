@@ -92,7 +92,7 @@
     <string name="zetWifiAan">Gelieve eerst de WIFI aan te zetten!</string>
     <string name="ok">Ok</string>
     <string name="verkeerdeWifi">Verkeerde WIFI hotspot gekozen, gelieve \'scorebord B\' te kiezen in tablet wifi menu</string>
-    <string name="geenComms">Geen communicatie met scorebord op plein</string>
+    <string name="geenComms">Geen communicatie met scorebord op plein </string>
     <string name="herstart">Herstart scorebord of contacteer Jan De Clerck (0495/429553)</string>
     <string name="error">ERROR</string>
     <string name="home_team">Home team</string>
@@ -126,7 +126,7 @@
     <string name="kies">Kies</string>
     <string name="software_door_stephan_janssen">Software door Stephan Janssen</string>
     <string name="electronica_door_jan_de_clerck">Electronica door Jan De Clerck</string>
-    <string name="versie_6_sep_2017">versie 6 Sep. 2017</string>
+    <string name="versie_6_sep_2017">versie 8 Sep. 2017</string>
     <string name="courtplan">courtPlan</string>
     <string name="start_aftelklok">Start Aftelklok</string>
     <string name="in_minuten">in minuten</string>

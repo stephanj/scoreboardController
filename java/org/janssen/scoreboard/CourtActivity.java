@@ -14,7 +14,7 @@ import org.janssen.scoreboard.model.Server;
  *
  * Created by stephan on 18/08/13.
  */
-class CourtActivity extends WifiControlActivity {
+public class CourtActivity extends WifiControlActivity {
 
     private int selectedCourt;
 
