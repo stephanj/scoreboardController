@@ -12,17 +12,10 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import cz.msebera.android.httpclient.HttpResponse;
-import cz.msebera.android.httpclient.HttpStatus;
-import cz.msebera.android.httpclient.StatusLine;
-import cz.msebera.android.httpclient.client.HttpClient;
-import cz.msebera.android.httpclient.client.methods.HttpGet;
-import cz.msebera.android.httpclient.client.methods.HttpPost;
-import cz.msebera.android.httpclient.client.methods.HttpPut;
-import cz.msebera.android.httpclient.conn.params.ConnManagerParams;
-import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
-import cz.msebera.android.httpclient.params.HttpConnectionParams;
-import cz.msebera.android.httpclient.params.HttpParams;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.internal.http.StatusLine;
 
 /**
  * The network utilities class.
@@ -43,18 +36,20 @@ final public class NetworkUtilities {
     /**
      * Configures the httpClient to connect to the URL provided.
      */
-    private static HttpClient getHttpClient(int timeout) {
-        HttpClient httpClient = new DefaultHttpClient();
-        final HttpParams params = httpClient.getParams();
-        HttpConnectionParams.setConnectionTimeout(params, timeout);
-        HttpConnectionParams.setSoTimeout(params, timeout);
-        ConnManagerParams.setTimeout(params, timeout);
-        return httpClient;
+    private static OkHttpClient getHttpClient() {
+        return new OkHttpClient();
+
+//        HttpClient httpClient = new DefaultHttpClient();
+//        final HttpParams params = httpClient.getParams();
+//        HttpConnectionParams.setConnectionTimeout(params, timeout);
+//        HttpConnectionParams.setSoTimeout(params, timeout);
+//        ConnManagerParams.setTimeout(params, timeout);
+//        return httpClient;
     }
 
-    private static HttpClient getHttpClient() {
-        return getHttpClient(HTTP_REQUEST_TIMEOUT_MS);
-    }
+//    private static HttpClient getHttpClient() {
+//        return getHttpClient(HTTP_REQUEST_TIMEOUT_MS);
+//    }
 
     /**
      * Connects to the scoreboard server, authenticates the provided username and password.
@@ -64,25 +59,22 @@ final public class NetworkUtilities {
      *
      * @return String The authentication token returned by the server (or null)
      */
-    public static String authenticate(String username, String password) throws IOException {
+    public static String authenticate(final String username,
+                                      final String password) throws IOException {
 
-        String AUTH_URI = String.format(RestURI.LOGIN.getValue(), Server.getIp(), username, password);
+        String AUTH_URL = String.format(RestURI.LOGIN.getValue(), Server.getIp(), username, password);
 
-        final HttpPost post = new HttpPost(AUTH_URI);
+        Request request = new Request.Builder()
+                .url(AUTH_URL)
+                .post(null)
+                .build();
 
-        final HttpResponse resp = getHttpClient().execute(post);
-        String authToken = null;
-        if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-            InputStream stream = (resp.getEntity() != null) ? resp.getEntity().getContent() : null;
-            if (stream != null) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-                authToken = reader.readLine().trim();
+        try (Response resp = getHttpClient().newCall(request).execute()) {
+            if (resp.isSuccessful()) {
+                return resp.message();
+            } else {
+                throw new IOException(resp.message());
             }
-        }
-        if ((authToken != null) && (authToken.length() > 0)) {
-            return authToken;
-        } else {
-            throw new IOException(resp.getStatusLine().toString());
         }
     }
 
@@ -97,35 +89,24 @@ final public class NetworkUtilities {
                                  final int gameType,
                                  final int ageCategory,
                                  final int court,
-                                 final boolean mirrored) throws UnsupportedEncodingException {
+                                 final boolean mirrored) throws IOException {
 
-        String NEW_GAME_URI = String.format(RestURI.CREATE_GAME.getValue(), Server.getIp(),
-                URLEncoder.encode(teamA, "UTF8"), URLEncoder.encode(teamB, "UTF8"), gameType, ageCategory, court, mirrored, token);
+        String NEW_GAME_URL = String.format(RestURI.CREATE_GAME.getValue(), Server.getIp(),
+                                                                            URLEncoder.encode(teamA, "UTF8"),
+                                                                            URLEncoder.encode(teamB, "UTF8"),
+                                                                            gameType, ageCategory, court, mirrored, token);
 
-        final HttpPost post = new HttpPost(NEW_GAME_URI);
+        Request request = new Request.Builder()
+                .url(NEW_GAME_URL)
+                .post(null)
+                .build();
 
-        try {
-            final HttpResponse resp = getHttpClient().execute(post);
-            String newGame = null;
-            if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED) {
-                InputStream stream = (resp.getEntity() != null) ? resp.getEntity().getContent() : null;
-                if (stream != null) {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-                    newGame = reader.readLine().trim();
-                }
-            }
-            if ((newGame != null) && (newGame.length() > 0)) {
-                Log.v(TAG, "Successfully created game");
-                return newGame;
+        try (Response resp = getHttpClient().newCall(request).execute()) {
+            if (resp.isSuccessful()) {
+                return resp.message();
             } else {
-                Log.e(TAG, "Error creating new game " + resp.getStatusLine());
-                return null;
+                throw new IOException(resp.message());
             }
-        } catch (final IOException e) {
-            Log.e(TAG, "IOException when creating new game", e);
-            return null;
-        } finally {
-            Log.v(TAG, "newGame completing");
         }
     }
 
@@ -134,19 +115,20 @@ final public class NetworkUtilities {
      */
     public static void startGame(final String token,
                                    final int gameId,
-                                   final boolean mirrored) throws UnsupportedEncodingException {
+                                   final boolean mirrored) throws IOException {
 
         String START_GAME_URI = String.format(RestURI.START_GAME.getValue(), Server.getIp(),
                 token, gameId, mirrored);
 
-        final HttpPost post = new HttpPost(START_GAME_URI);
+        Request request = new Request.Builder()
+                .url(START_GAME_URI)
+                .post(null)
+                .build();
 
-        try {
-            getHttpClient().execute(post);
-        } catch (final IOException e) {
-            Log.e(TAG, "IOException when creating new game", e);
-        } finally {
-            Log.v(TAG, "newGame completing");
+        try (Response resp = getHttpClient().newCall(request).execute()) {
+            if (!resp.isSuccessful()) {
+                throw new IOException(resp.message());
+            }
         }
     }
 

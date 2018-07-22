@@ -1,7 +1,6 @@
 package org.janssen.scoreboard;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -9,16 +8,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import org.janssen.scoreboard.comms.NetworkUtilities;
 import org.janssen.scoreboard.model.Server;
 import org.janssen.scoreboard.model.types.RoomType;
+import org.janssen.scoreboard.task.OnTaskListener;
+import org.janssen.scoreboard.task.UserLoginTask;
 
 /**
  * Login activity.
  * Created by stephan on 16/06/13.
  */
-public class LoginActivity extends WifiControlActivity {
+public class LoginActivity extends WifiControlActivity implements OnTaskListener {
 
     /**
      * The Intent extra to store username.
@@ -33,26 +34,21 @@ public class LoginActivity extends WifiControlActivity {
     /**
      * Keep track of the login task so can cancel it if requested
      */
-    private UserLoginTask mAuthTask = null;
+    private UserLoginTask loginTask = null;
 
-    private TextView mMessage;
+    private Integer selectedCourt;
+    private String username;
+    private String password;
 
-    private String mPassword;
-
-    private EditText mPasswordEdit;
-
+    private TextView message;
+    private EditText usernameEdit;
+    private EditText passwordEdit;
     private ProgressBar progressBar;
 
     /**
      * Was the original caller asking for an entirely new account?
      */
-    protected boolean mRequestNewAccount = false;
-
-    private String mUsername;
-
-    private EditText mUsernameEdit;
-
-    private Integer selectedCourt;
+    protected boolean requestNewAccount = false;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -62,28 +58,34 @@ public class LoginActivity extends WifiControlActivity {
 
         // Use the Server IP number based on selected court
         Bundle bundle = getIntent().getExtras();
-        selectedCourt = (Integer)bundle.get(Constants.COURT);
-        if (selectedCourt != null) {
-            Server.setIp(RoomType.getIpForCourt(selectedCourt));
+        if (bundle != null &&
+            bundle.containsKey(Constants.COURT)) {
+            selectedCourt = (Integer) bundle.get(Constants.COURT);
+            if (selectedCourt != null) {
+                Server.setIp(RoomType.getIpForCourt(selectedCourt));
+            } else {
+                Server.setIp(RoomType.getIpForCourt(RoomType.ROOM_B.ordinal()));
+            }
         } else {
-            Server.setIp(RoomType.getIpForCourt(RoomType.ROOM_B.ordinal()));
+            Toast.makeText(getApplicationContext(), "Court was not selected", Toast.LENGTH_LONG).show();
+            return;
         }
 
         validateWifiAndServerComms();
 
         final Intent intent = getIntent();
-        mUsername = intent.getStringExtra(PARAM_USERNAME);
-        mRequestNewAccount = mUsername == null;
+        username = intent.getStringExtra(PARAM_USERNAME);
+        requestNewAccount = username == null;
 
         progressBar = findViewById(R.id.progressBar);
 
-        mMessage = findViewById(R.id.message);
-        mUsernameEdit = findViewById(R.id.username_edit);
-        mPasswordEdit = findViewById(R.id.password_edit);
-        if (!TextUtils.isEmpty(mUsername)) {
-            mUsernameEdit.setText(mUsername);
+        message = findViewById(R.id.message);
+        usernameEdit = findViewById(R.id.username_edit);
+        passwordEdit = findViewById(R.id.password_edit);
+        if (!TextUtils.isEmpty(username)) {
+            usernameEdit.setText(username);
         }
-        mMessage.setText(getMessage());
+        message.setText(getMessage());
     }
 
     /**
@@ -94,17 +96,17 @@ public class LoginActivity extends WifiControlActivity {
      * @param view The Submit button for which this method is invoked
      */
     public void handleLogin(View view) {
-        if (mRequestNewAccount) {
-            mUsername = mUsernameEdit.getText().toString();
+        if (requestNewAccount) {
+            username = usernameEdit.getText().toString();
         }
-        mPassword = mPasswordEdit.getText().toString();
+        password = passwordEdit.getText().toString();
 
-        if (TextUtils.isEmpty(mUsername) || TextUtils.isEmpty(mPassword)) {
-            mMessage.setText(getMessage());
+        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
+            message.setText(getMessage());
         } else {
             progressBar.setVisibility(View.VISIBLE);
-            mAuthTask = new UserLoginTask();
-            mAuthTask.execute();
+            loginTask = new UserLoginTask(this, username, password);
+            loginTask.execute();
         }
     }
 
@@ -124,7 +126,30 @@ public class LoginActivity extends WifiControlActivity {
         intent.putExtra(Constants.AUTH_TOKEN, authToken);
         intent.putExtra(Constants.COURT, selectedCourt);
         startActivity(intent);
+    }
 
+    /**
+     * Returns the message to be displayed at the top of the login dialog box.
+     */
+    private CharSequence getMessage() {
+        getString(R.string.label);
+        if (TextUtils.isEmpty(username)) {
+            // If no username, then we ask the user to log in using an appropriate service.
+            return getText(R.string.login_activity_newaccount_text);
+        }
+        if (TextUtils.isEmpty(password)) {
+            // We have an account but no password
+            return getText(R.string.login_activity_loginfail_text_pwmissing);
+        }
+        return null;
+    }
+
+    @Override
+    public void onTaskCancelled() {
+        Log.i(TAG, "onAuthenticationCancel()");
+
+        // Our task is complete, so clear it out
+        loginTask = null;
     }
 
     /**
@@ -133,7 +158,8 @@ public class LoginActivity extends WifiControlActivity {
      * @param result the authentication token returned by the server, or NULL if
      *                  authentication failed.
      */
-    public void onAuthenticationResult(String result) {
+    @Override
+    public void onTaskCompleted(String result) {
 
         boolean success = (result != null &&
                            result.length() > 0) &&
@@ -142,77 +168,20 @@ public class LoginActivity extends WifiControlActivity {
         progressBar.setVisibility(View.INVISIBLE);
 
         // Our task is complete, so clear it out
-        mAuthTask = null;
+        loginTask = null;
 
         if (success) {
             finishLogin(result);
         } else {
-            if (mRequestNewAccount) {
+            if (requestNewAccount) {
                 // "Please enter a valid username/password.
-                mMessage.setText(result);
+                message.setText(result);
             } else {
                 // "Please enter a valid password." (Used when the
                 // account is already in the database but the password
                 // doesn't work.)
-                mMessage.setText(getText(R.string.login_activity_loginfail_text_pwonly));
+                message.setText(getText(R.string.login_activity_loginfail_text_pwonly));
             }
-        }
-    }
-
-    public void onAuthenticationCancel() {
-        Log.i(TAG, "onAuthenticationCancel()");
-
-        // Our task is complete, so clear it out
-        mAuthTask = null;
-    }
-
-    /**
-     * Returns the message to be displayed at the top of the login dialog box.
-     */
-    private CharSequence getMessage() {
-        getString(R.string.label);
-        if (TextUtils.isEmpty(mUsername)) {
-            // If no username, then we ask the user to log in using an appropriate service.
-            return getText(R.string.login_activity_newaccount_text);
-        }
-        if (TextUtils.isEmpty(mPassword)) {
-            // We have an account but no password
-            return getText(R.string.login_activity_loginfail_text_pwmissing);
-        }
-        return null;
-    }
-
-
-    /**
-     * Represents an asynchronous task used to authenticate a user against the
-     * SampleSync Service
-     */
-    private class UserLoginTask extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected String doInBackground(Void... params) {
-            // We do the actual work of authenticating the user
-            // in the NetworkUtilities class.
-            try {
-                return NetworkUtilities.authenticate(mUsername, mPassword);
-            } catch (Exception ex) {
-                return ex.toString();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(final String authToken) {
-            // On a successful authentication, call back into the Activity to
-            // communicate the authToken (or null for an error).
-            onAuthenticationResult(authToken);
-        }
-
-        @Override
-        protected void onCancelled() {
-            // If the action was canceled (by the user clicking the cancel
-            // button in the progress dialog), then call back into the
-            // activity to let it know.
-            onAuthenticationCancel();
         }
     }
 }

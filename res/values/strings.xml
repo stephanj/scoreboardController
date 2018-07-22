@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">ScoreBoard</string>
+    <string name="app_name">ScoreBoardTEST</string>
     <string name="games">ScoreBoard</string>
     <string name="login">ScoreBoard</string>
 
@@ -121,7 +121,6 @@
     <string name="start">Start</string>
     <string name="headerimage">headerImage</string>
     <string name="gebruiker">Gebruiker</string>
-    <string name="paswoord">Paswoord</string>
     <string name="ga_verder">Ga Verder</string>
     <string name="kies">Kies</string>
     <string name="software_door_stephan_janssen">Software door Stephan Janssen</string>
@@ -133,4 +132,6 @@
     <string name="start_wedstrijd">Start Wedstrijd</string>
     <string name="geef_naam_bezoekers">Geef naam bezoekers</string>
     <string name="geef_naam_thuis_ploeg">Geef naam thuis ploeg</string>
+    <string name="gebruikersnaam">gebruikersnaam</string>
+    <string name="paswoord">Paswoord</string>
 </resources>

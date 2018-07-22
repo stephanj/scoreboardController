@@ -4,18 +4,18 @@ package org.janssen.scoreboard;
  * App constants.
  * Created by stephan on 16/06/13.
  */
-abstract class Constants {
+public interface Constants {
 
-    static String AUTH_TOKEN = "authToken";
-    static String COURT = "court";
+    String AUTH_TOKEN = "authToken";
+    String COURT = "court";
 
-    static String GAME = "game";
+    String GAME = "game";
 
-    static String MIRRORED = "mirrored";
+    String MIRRORED = "mirrored";
 
-    static String TEAM_A = "teamA";
-    static String TEAM_B = "teamB";
-    static String NAME = "name";
+    String TEAM_A = "teamA";
+    String TEAM_B = "teamB";
+    String NAME = "name";
 
-    static String ID = "id";
+    String ID = "id";
 }

@@ -1,12 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:fitsSystemWindows="true">
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -27,42 +23,45 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/scoreA1"
-                    android:clickable="true"
-                    android:src="@drawable/one"
+                    android:src="@drawable/score_one_point_button_selector"
                     android:layout_marginStart="18dp"
                     style="@android:style/MediaButton.Play"
                     android:layout_below="@+id/switch1"
                     android:layout_alignParentStart="true"
-                    android:contentDescription="@string/plusonehome" />
+                    android:contentDescription="@string/plusonehome"
+                    android:focusable="true" />
 
             <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/scoreA2"
                     android:clickable="true"
-                    android:src="@drawable/two"
+                    android:src="@drawable/score_two_points_button_selector"
                     style="@android:style/MediaButton.Play"
                     android:layout_centerVertical="true"
                     android:layout_alignStart="@+id/scoreA1"
-                    android:contentDescription="@string/plustwohome" />
+                    android:contentDescription="@string/plustwohome"
+                    android:focusable="true" />
 
             <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/scoreA3"
                     android:clickable="true"
-                    android:src="@drawable/three"
+                    android:src="@drawable/score_three_points_button_selector"
                     style="@android:style/MediaButton.Play"
                     android:layout_alignBottom="@id/clockDown"
                     android:layout_alignStart="@+id/scoreA2"
-                    android:contentDescription="@string/plusthreehome" />
+                    android:contentDescription="@string/plusthreehome"
+                android:focusable="true"/>
 
             <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/foulA"
                     android:clickable="true"
-                    android:src="@drawable/foul"
+                    android:focusable="true"
+                    android:src="@drawable/foul_button_selector"
                     style="@android:style/MediaButton.Play"
                     android:layout_alignTop="@+id/scoreA1"
                     android:layout_toEndOf="@+id/scoreA1"
@@ -74,7 +73,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/scoreB2"
                     android:clickable="true"
-                    android:src="@drawable/two"
+                    android:focusable="true"
+                    android:src="@drawable/score_two_points_button_selector"
                     style="@android:style/MediaButton.Play"
                     android:layout_alignTop="@+id/scoreA2"
                     android:layout_alignParentEnd="true"
@@ -86,7 +86,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/foulB"
                     android:clickable="true"
-                    android:src="@drawable/foul"
+                    android:focusable="true"
+                    android:src="@drawable/foul_button_selector"
                     style="@android:style/MediaButton.Play"
                     android:layout_below="@+id/visitorsTeam"
                     android:layout_toEndOf="@id/clockUp"
@@ -97,7 +98,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/scoreB3"
                     android:clickable="true"
-                    android:src="@drawable/three"
+                    android:focusable="true"
+                    android:src="@drawable/score_three_points_button_selector"
                     style="@android:style/MediaButton.Play"
                     android:layout_alignTop="@+id/scoreA3"
                     android:layout_alignStart="@+id/scoreB2"
@@ -108,7 +110,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/scoreB1"
                     android:clickable="true"
-                    android:src="@drawable/one"
+                    android:focusable="true"
+                    android:src="@drawable/score_one_point_button_selector"
                     style="@android:style/MediaButton.Play"
                     android:layout_alignTop="@+id/quarterBtn"
                     android:layout_alignStart="@+id/scoreB2"
@@ -119,7 +122,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/timeButton"
                     android:clickable="true"
-                    android:src="@drawable/clock"
+                    android:focusable="true"
+                    android:src="@drawable/clock_button_selector"
                     style="@android:style/MediaButton.Play"
                     android:layout_alignTop="@+id/visitorsTimeoutButton"
                     android:layout_centerHorizontal="true"
@@ -130,7 +134,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/quarterBtn"
                     android:clickable="true"
-                    android:src="@drawable/quarter"
+                    android:focusable="true"
+                    android:src="@drawable/quarter_button_selector"
                     style="@android:style/MediaButton.Play"
                     android:layout_alignTop="@+id/foulB"
                     android:layout_centerHorizontal="true"
@@ -179,7 +184,8 @@
                     android:layout_height="wrap_content"
                     android:id="@id/clockUp"
                     android:clickable="true"
-                    android:src="@drawable/plusone"
+                    android:focusable="true"
+                    android:src="@drawable/time_up_button_selector"
                     android:layout_alignTop="@id/clockDown"
                     android:layout_toEndOf="@+id/timeButton"
                     android:contentDescription="@string/plustime" />
@@ -190,7 +196,8 @@
                     android:layout_height="wrap_content"
                     android:id="@id/clockDown"
                     android:clickable="true"
-                    android:src="@drawable/minusone"
+                    android:focusable="true"
+                    android:src="@drawable/time_down_button_selector"
                     android:layout_alignParentBottom="true"
                     android:layout_toEndOf="@+id/foulA"
                     android:layout_marginBottom="19dp"
@@ -202,7 +209,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/homeTimeoutButton"
                 android:clickable="true"
-                android:src="@drawable/timeout"
+                android:focusable="true"
+                android:src="@drawable/timeout_button_selector"
                 android:layout_alignTop="@+id/scoreA2"
                 android:layout_alignStart="@+id/foulA"
                 android:contentDescription="@string/hometimeout" />
@@ -213,7 +221,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/visitorsTimeoutButton"
                 android:clickable="true"
-                android:src="@drawable/timeout"
+                android:focusable="true"
+                android:src="@drawable/timeout_button_selector"
                 android:layout_alignTop="@+id/scoreB2"
                 android:layout_alignStart="@+id/foulB"
                 android:contentDescription="@string/visitorstimeout" />
@@ -224,6 +233,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/attentionBtn"
                 android:clickable="true"
+                android:focusable="true"
                 android:src="@drawable/attention"
                 android:layout_alignParentBottom="true"
                 android:layout_alignStart="@+id/quarterBtn"
@@ -242,5 +252,4 @@
                 android:layout_alignStart="@id/clockUp" />
 
         </RelativeLayout>
-    </FrameLayout>
 </FrameLayout>

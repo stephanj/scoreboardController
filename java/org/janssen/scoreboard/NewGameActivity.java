@@ -1,11 +1,8 @@
 package org.janssen.scoreboard;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,7 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import org.janssen.scoreboard.comms.NetworkUtilities;
+import org.janssen.scoreboard.task.NewGameTask;
+import org.janssen.scoreboard.task.OnTaskListener;
 
 import static org.janssen.scoreboard.Constants.AUTH_TOKEN;
 import static org.janssen.scoreboard.Constants.COURT;
@@ -29,14 +27,12 @@ import static org.janssen.scoreboard.Constants.MIRRORED;
  *
  * Created by stephan on 16/06/13.
  */
-public class NewGameActivity extends WifiControlActivity {
+public class NewGameActivity extends WifiControlActivity implements OnTaskListener {
 
     public static final int COURT_B = 1;
     public static final int SENIOREN = 0;
 
     private String authToken;
-
-    private NewGameTask newGameTask;
 
     /**
      * The tag used to log to adb console.
@@ -66,8 +62,13 @@ public class NewGameActivity extends WifiControlActivity {
         validateWifi();
 
         Bundle bundle = getIntent().getExtras();
-        authToken = bundle.getString(AUTH_TOKEN);
-        selectedCourt = (Integer) bundle.get(COURT);
+        if (bundle != null) {
+            authToken = bundle.getString(AUTH_TOKEN);
+            selectedCourt = (Integer) bundle.get(COURT);
+        } else {
+            Toast.makeText(getApplicationContext(), "No court selected, restart", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         teamAEdit = findViewById(R.id.teamA);
         teamAEdit.setText(R.string.oostkamp);
@@ -121,8 +122,9 @@ public class NewGameActivity extends WifiControlActivity {
         teamA = teamAEdit.getText().toString();
         teamB = teamBEdit.getText().toString();
 
-        if (TextUtils.isEmpty(teamA) || TextUtils.isEmpty(teamB)) {
-            Toast.makeText(getApplicationContext(), "Provide team names", Toast.LENGTH_LONG);
+        if (TextUtils.isEmpty(teamA) ||
+            TextUtils.isEmpty(teamB)) {
+            Toast.makeText(getApplicationContext(), "Provide team names", Toast.LENGTH_LONG).show();
         } else {
 
             if (ageCategory == SENIOREN &&
@@ -156,14 +158,15 @@ public class NewGameActivity extends WifiControlActivity {
         // Show a progress dialog, and kick off a background task to perform the new game attempt
         progressBar.setVisibility(View.VISIBLE);
 
-        newGameTask = new NewGameTask();
+        NewGameTask newGameTask = new NewGameTask(this, teamA, teamB, gameType, ageCategory, selectedCourt, mirroring, authToken);
         newGameTask.execute();
     }
 
     /**
      * Called when the new game creation process completes.
      */
-    public void onNewGameResult(String result) {
+    @Override
+    public void onTaskCompleted(String result) {
         progressBar.setVisibility(View.INVISIBLE);
 
         // Show count down
@@ -175,48 +178,11 @@ public class NewGameActivity extends WifiControlActivity {
         startActivity(intent);
     }
 
-
-    public void onNewGameCancel() {
-        Log.i(TAG, "onGamesListCancel()");
-
-        // Our task is complete, so clear it out
-        newGameTask = null;
+    @Override
+    public void onTaskCancelled() {
+        Log.i(TAG, "onTaskCancelled()");
 
         // Hide the progress dialog
         progressBar.setVisibility(View.INVISIBLE);
     }
-
-    /**
-     * Represents an asynchronous task used to authenticate a user against the
-     * SampleSync Service
-     */
-    private class NewGameTask extends AsyncTask<Void, Void, String> {
-
-        @Override
-        protected String doInBackground(Void... params) {
-            try {
-                return NetworkUtilities.newGame(authToken, teamA, teamB, gameType, ageCategory, selectedCourt, mirroring);
-            } catch (Exception ex) {
-                Log.e(TAG, "New game task");
-                Log.i(TAG, ex.toString());
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(final String games) {
-            // On a successful authentication, call back into the Activity to
-            // communicate the games (or null for an error).
-            onNewGameResult(games);
-        }
-
-        @Override
-        protected void onCancelled() {
-            // If the action was canceled (by the user clicking the cancel
-            // button in the progress dialog), then call back into the
-            // activity to let it know.
-            onNewGameCancel();
-        }
-    }
-
 }

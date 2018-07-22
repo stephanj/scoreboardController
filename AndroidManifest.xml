@@ -8,13 +8,14 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name">
+        android:label="@string/app_name"
+        android:fullBackupContent="@xml/backup_descriptor">
 
         <activity
-                android:name="org.janssen.scoreboard.CourtActivity"
+                android:name="org.janssen.scoreboard.ScoreActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme"
-                android:screenOrientation="portrait">
+                android:screenOrientation="landscape">
                 <intent-filter>
                     <action android:name="android.intent.action.MAIN" />
 
@@ -43,12 +44,12 @@
                 android:screenOrientation="portrait">
         </activity>
 
-        <activity
-                android:name="org.janssen.scoreboard.ScoreActivity"
-                android:label="@string/games"
-                android:theme="@style/ImmersiveStickyTheme"
-                android:screenOrientation="landscape">
-        </activity>
+        <!--<activity-->
+                <!--android:name="org.janssen.scoreboard.ScoreActivity"-->
+                <!--android:label="@string/games"-->
+                <!--android:theme="@style/ImmersiveStickyTheme"-->
+                <!--android:screenOrientation="landscape">-->
+        <!--</activity>-->
 
     </application>
 

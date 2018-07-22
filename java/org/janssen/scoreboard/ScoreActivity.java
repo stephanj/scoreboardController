@@ -1,14 +1,12 @@
 package org.janssen.scoreboard;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -17,13 +15,17 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.janssen.scoreboard.comms.NetworkUtilities;
 import org.janssen.scoreboard.model.Server;
 import org.janssen.scoreboard.model.types.ClockAction;
+import org.janssen.scoreboard.task.AttentionTask;
+import org.janssen.scoreboard.task.ClockTask;
+import org.janssen.scoreboard.task.FoulTask;
+import org.janssen.scoreboard.task.QuarterTask;
+import org.janssen.scoreboard.task.ScoreTask;
+import org.janssen.scoreboard.task.TimeoutTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import static org.janssen.scoreboard.Constants.AUTH_TOKEN;
@@ -35,13 +37,7 @@ import static org.janssen.scoreboard.Constants.TEAM_B;
 
 public class ScoreActivity extends ImmersiveStickyActivity {
 
-    /**
-     * The tag used to log to adb console.
-     */
-    private static final String TAG = "ScoreActivity";
-
     public static final String NETWORK_PROBLEEM_PROBEER_OPNIEUW = "Communicatie probleem, probeer opnieuw!";
-    public static final String ERROR_PROBEER_OPNIEUW = "Error, probeer opnieuw -";
     public static final String OPNIEUW = "opnieuw";
     public static final String OK = "OK";
 
@@ -58,14 +54,9 @@ public class ScoreActivity extends ImmersiveStickyActivity {
 
     private ImageButton quarterBtn;
 
-    private ImageButton homeTimeoutBtn;
-    private ImageButton visitorsTimeoutBtn;
-
     private ImageButton timeBtn;
     private ImageButton timeUpBtn;
     private ImageButton timeDownBtn;
-
-    private ImageButton attentionBtn;
 
     private TextView homeTeam;
     private TextView visitorsTeam;
@@ -90,9 +81,7 @@ public class ScoreActivity extends ImmersiveStickyActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // validateWifi();
-
-        addListenerOnButton();
+        addButtonListeners();
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -138,7 +127,6 @@ public class ScoreActivity extends ImmersiveStickyActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         new ClockTask(authToken, gameId, ClockAction.STOP).execute();
     }
 
@@ -147,121 +135,7 @@ public class ScoreActivity extends ImmersiveStickyActivity {
         // Ignore the back button
     }
 
-    public void addListenerOnButton() {
-
-        View.OnTouchListener onTouchListener = new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                ImageButton btn = (ImageButton) v;
-
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
-                    // TODO Could probably be replaced by using an /drawable/button.xml file
-                    if (btn.getId() == scoreA1.getId()) {
-                        btn.setImageResource(R.drawable.press_one);
-                        processScoreA(btn.getId());
-
-                    } else if (btn.getId() == scoreA2.getId()) {
-                        btn.setImageResource(R.drawable.press_two);
-                        processScoreA(btn.getId());
-
-                    } else if (btn.getId() == scoreA3.getId()) {
-                        btn.setImageResource(R.drawable.press_three);
-                        processScoreA(btn.getId());
-
-                    } else if (btn.getId() == scoreB1.getId()) {
-                        btn.setImageResource(R.drawable.press_one);
-                        processScoreB(btn.getId());
-
-                    } else if (btn.getId() == scoreB2.getId()) {
-                        btn.setImageResource(R.drawable.press_two);
-                        processScoreB(btn.getId());
-
-                    } else if (btn.getId() == scoreB3.getId()) {
-                        btn.setImageResource(R.drawable.press_three);
-                        processScoreB(btn.getId());
-
-                    } else if (btn.getId() == foulA.getId()) {
-                        btn.setImageResource(R.drawable.press_foul);
-                        showFoulsDialog(v, teamA);
-
-                    } else if (btn.getId() == foulB.getId()) {
-                        btn.setImageResource(R.drawable.press_foul);
-                        showFoulsDialog(v, teamB);
-
-                    } else if (btn.getId() == quarterBtn.getId()) {
-                        btn.setImageResource(R.drawable.press_quarter);
-                        executeQuarterTask(gameId);
-
-                        // Would be nice if a websocket push request does this!
-                        timeBtn.setImageResource(R.drawable.clock);
-                        isClockRunning = false;
-
-                    } else if (btn.getId() == attentionBtn.getId()) {
-                        attentionBtn.setImageResource(R.drawable.press_attention);
-                        new AttentionTask().execute();
-
-                    } else if (btn.getId() == homeTimeoutBtn.getId()) {
-                        homeTimeoutBtn.setImageResource(R.drawable.press_timeout);
-                        new TimeoutTask(teamA).execute();
-
-                    } else if (btn.getId() == visitorsTimeoutBtn.getId()) {
-                        visitorsTimeoutBtn.setImageResource(R.drawable.press_timeout);
-                        new TimeoutTask(teamB).execute();
-
-                    } else if (btn.getId() == timeUpBtn.getId() && !isClockRunning) {
-                        if (isPositive) {
-                            btn.setImageResource(R.drawable.press_plus_one_sec);
-                            executeClockTask(authToken, gameId, ClockAction.INC, 1);
-                        } else {
-                            executeClockTask(authToken, gameId, ClockAction.INC, 20);
-                        }
-
-                    } else if (btn.getId() == timeDownBtn.getId() && !isClockRunning) {
-                        if (isPositive) {
-                            btn.setImageResource(R.drawable.press_minus_one_sec);
-                            executeClockTask(authToken, gameId, ClockAction.DEC, 1);
-                        } else {
-                            executeClockTask(authToken, gameId, ClockAction.DEC, 20);
-                        }
-
-                    } else if (btn.getId() == timeBtn.getId()) {
-                        invalidateOptionsMenu();
-
-                        isClockRunning = !isClockRunning;
-
-                        executeClockTask(authToken, gameId, isClockRunning? ClockAction.START : ClockAction.STOP);
-                    }
-
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (btn.getId() == scoreA1.getId() ||
-                        btn.getId() == scoreB1.getId()) {
-                        btn.setImageResource(isPositive ? R.drawable.one : R.drawable.min_one);
-                    } else if (btn.getId() == scoreA2.getId() ||
-                               btn.getId() == scoreB2.getId()) {
-                        btn.setImageResource(isPositive ? R.drawable.two : R.drawable.min_two);
-                    } else if (btn.getId() == scoreA3.getId() ||
-                               btn.getId() == scoreB3.getId()) {
-                        btn.setImageResource(isPositive? R.drawable.three : R.drawable.min_three);
-                    } else if (btn.getId() == foulA.getId() ||
-                               btn.getId() == foulB.getId()) {
-                        btn.setImageResource(isPositive ? R.drawable.foul : R.drawable.min_foul);
-                    } else if (btn.getId() == quarterBtn.getId()) {
-                        btn.setImageResource(isPositive ? R.drawable.quarter : R.drawable.min_quarter);
-                    } else if (btn.getId() == timeUpBtn.getId()) {
-                        btn.setImageResource(isPositive ? R.drawable.plusone : R.drawable.clock_plus_20s);
-                    } else if (btn.getId() == timeDownBtn.getId()) {
-                        btn.setImageResource(isPositive ? R.drawable.minusone : R.drawable.clock_minus_20s);
-                    } else if (btn.getId() == attentionBtn.getId()) {
-                        btn.setImageResource(R.drawable.attention);
-                    } else if (btn.getId() == homeTimeoutBtn.getId() ||
-                               btn.getId() == visitorsTimeoutBtn.getId()) {
-                        btn.setImageResource(R.drawable.timeout);
-                    }
-                }
-
-                return false;
-            }
-        };
+    public void addButtonListeners() {
 
         Button newGameBtn = findViewById(R.id.newGame);
         newGameBtn.setOnClickListener(new View.OnClickListener() {
@@ -271,57 +145,99 @@ public class ScoreActivity extends ImmersiveStickyActivity {
             }
         });
 
-        // Team A
-        scoreA1 = findViewById(R.id.scoreA1);
-        scoreA1.setOnTouchListener(onTouchListener);
-
-        scoreA2 = findViewById(R.id.scoreA2);
-        scoreA2.setOnTouchListener(onTouchListener);
-
-        scoreA3 = findViewById(R.id.scoreA3);
-        scoreA3.setOnTouchListener(onTouchListener);
-
-        // Team B
-        scoreB1 = findViewById(R.id.scoreB1);
-        scoreB1.setOnTouchListener(onTouchListener);
-
-        scoreB2 = findViewById(R.id.scoreB2);
-        scoreB2.setOnTouchListener(onTouchListener);
-
-        scoreB3 = findViewById(R.id.scoreB3);
-        scoreB3.setOnTouchListener(onTouchListener);
+        // Setup score A and B buttons
+        setupScoreATeamButtons();
+        setupScoreBTeamButtons();
 
         // Fouls
         foulA = findViewById(R.id.foulA);
-        foulA.setOnTouchListener(onTouchListener);
+        foulA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showFoulsDialog(view, teamA);
+            }
+        });
 
         foulB = findViewById(R.id.foulB);
-        foulB.setOnTouchListener(onTouchListener);
+        foulB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showFoulsDialog(view, teamB);
+            }
+        });
 
         // Quarter
         quarterBtn = findViewById(R.id.quarterBtn);
-        quarterBtn.setOnTouchListener(onTouchListener);
+        quarterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                executeQuarterTask(gameId);
+
+                timeBtn.setImageResource(R.drawable.clock);
+                isClockRunning = false;
+            }
+        });
 
         // Timeout buttons
-        homeTimeoutBtn = findViewById(R.id.homeTimeoutButton);
-        homeTimeoutBtn.setOnTouchListener(onTouchListener);
+        ImageButton homeTimeoutBtn = findViewById(R.id.homeTimeoutButton);
+        homeTimeoutBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                new TimeoutTask(teamA, authToken).execute();
+            }
+        });
 
-        visitorsTimeoutBtn = findViewById(R.id.visitorsTimeoutButton);
-        visitorsTimeoutBtn.setOnTouchListener(onTouchListener);
+        ImageButton visitorsTimeoutBtn = findViewById(R.id.visitorsTimeoutButton);
+        visitorsTimeoutBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                new TimeoutTask(teamB, authToken).execute();
+            }
+        });
 
         // Attention button
-        attentionBtn = findViewById(R.id.attentionBtn);
-        attentionBtn.setOnTouchListener(onTouchListener);
+        ImageButton attentionBtn = findViewById(R.id.attentionBtn);
+        attentionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AttentionTask(authToken).execute();
+            }
+        });
 
-        // Time
+            // Time
         timeBtn = findViewById(R.id.timeButton);
-        timeBtn.setOnTouchListener(onTouchListener);
+        timeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                invalidateOptionsMenu();
+
+                isClockRunning = !isClockRunning;
+
+                executeClockTask(authToken, gameId, isClockRunning? ClockAction.START : ClockAction.STOP);
+            }
+        });
 
         timeUpBtn = findViewById(R.id.clockUp);
-        timeUpBtn.setOnTouchListener(onTouchListener);
+        timeUpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isPositive) {
+                    executeClockTask(authToken, gameId, ClockAction.INC, 1);
+                } else {
+                    executeClockTask(authToken, gameId, ClockAction.INC, 20);
+                }
+            }
+        });
 
         timeDownBtn = findViewById(R.id.clockDown);
-        timeDownBtn.setOnTouchListener(onTouchListener);
+        timeDownBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isPositive) {
+                    executeClockTask(authToken, gameId, ClockAction.DEC, 1);
+                } else {
+                    executeClockTask(authToken, gameId, ClockAction.DEC, 20);
+                }
+            }
+        });
 
         Switch switchBtn = findViewById(R.id.switch1);
         switchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -360,6 +276,23 @@ public class ScoreActivity extends ImmersiveStickyActivity {
         });
     }
 
+    private void setupScoreATeamButtons() {
+        scoreA1 = findViewById(R.id.scoreA1);
+        scoreA2 = findViewById(R.id.scoreA2);
+        scoreA3 = findViewById(R.id.scoreA3);
+
+        View.OnClickListener scoreAListener = new View.OnClickListener() {
+            public void onClick(View v) {
+                processScoreA(v.getId());
+            }
+        };
+
+        // Team A
+        scoreA1.setOnClickListener(scoreAListener);
+        scoreA2.setOnClickListener(scoreAListener);
+        scoreA3.setOnClickListener(scoreAListener);
+    }
+
     private void processScoreA(int buttonId) {
         int points = 0;
 
@@ -370,6 +303,23 @@ public class ScoreActivity extends ImmersiveStickyActivity {
         }
 
         executeScoreTask(authToken, homeTeam, teamAName, teamA, points);
+    }
+
+    private void setupScoreBTeamButtons() {
+        scoreB1 = findViewById(R.id.scoreB1);
+        scoreB2 = findViewById(R.id.scoreB2);
+        scoreB3 = findViewById(R.id.scoreB3);
+
+        View.OnClickListener scoreBListener = new View.OnClickListener() {
+            public void onClick(View v) {
+                processScoreB(v.getId());
+            }
+        };
+
+        // Score B
+        scoreB1.setOnClickListener(scoreBListener);
+        scoreB2.setOnClickListener(scoreBListener);
+        scoreB3.setOnClickListener(scoreBListener);
     }
 
     private void processScoreB(int buttonId) {
@@ -384,13 +334,14 @@ public class ScoreActivity extends ImmersiveStickyActivity {
         executeScoreTask(authToken, visitorsTeam, teamBName, teamB, points);
     }
 
+    @SuppressLint("ShowToast")
     private void executeQuarterTask(final int gameId) {
 
-        QuarterTask quarterTask = new QuarterTask(gameId);
+        QuarterTask quarterTask = new QuarterTask(gameId, authToken, isPositive);
         quarterTask.execute();
 
         try {
-            String result = quarterTask.get();
+            final String result = quarterTask.get();
             Toast toast;
             if (result.equalsIgnoreCase(OK)) {
                 toast = Toast.makeText(getApplicationContext(), OK, Toast.LENGTH_SHORT);
@@ -404,13 +355,14 @@ public class ScoreActivity extends ImmersiveStickyActivity {
         }
     }
 
+    @SuppressLint("ShowToast")
     private void executeScoreTask(final String token,
                                   final TextView teamView,
                                   final String teamName,
                                   final int teamId,
                                   final int points) {
 
-        final ScoreTask scoreTask = new ScoreTask(token, teamView, teamName, teamId, points);
+        final ScoreTask scoreTask = new ScoreTask(token, teamView, teamName, teamId, points, isPositive);
         scoreTask.execute();
         try {
             String result = scoreTask.get();
@@ -459,6 +411,7 @@ public class ScoreActivity extends ImmersiveStickyActivity {
             e.printStackTrace();
         }
     }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (isClockRunning) {
@@ -479,7 +432,7 @@ public class ScoreActivity extends ImmersiveStickyActivity {
         builder.setTitle(getString(R.string.personal_fouls))
                .setSingleChoiceItems(personalFouls, 0, new DialogInterface.OnClickListener() {
                    public void onClick(DialogInterface dialogInterface, int item) {
-                       new FoulTask(authToken, teamID, item + 1).execute();
+                       new FoulTask(authToken, teamID, item + 1, isPositive).execute();
                        dialogInterface.dismiss();
                    }
                })
@@ -517,177 +470,5 @@ public class ScoreActivity extends ImmersiveStickyActivity {
                })
                .create()
                .show();
-    }
-
-    /**
-     * Represents an asynchronous task used to set the score
-     */
-    private class ScoreTask extends AsyncTask<Void, Void, String> {
-
-        private String token;
-        private int teamId;
-        private int points;
-        private TextView textView;
-        private String teamName;
-
-        ScoreTask(final String token,
-                  final TextView textView,
-                  final String teamName,
-                  final int teamId,
-                  final int points) {
-            this.token = token;
-            this.textView = textView;
-            this.teamName = teamName;
-            this.teamId = teamId;
-            this.points = points;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            try {
-                return NetworkUtilities.updateScore(token, isPositive, teamId, points);
-            } catch (IOException ex) {
-                return NETWORK_PROBLEEM_PROBEER_OPNIEUW;
-            } catch (Exception ex) {
-                return ERROR_PROBEER_OPNIEUW + ex.toString();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (!result.contains(OPNIEUW)) {
-                textView.setText(teamName + " " + result);
-            }
-        }
-    }
-
-    /**
-     * Represents an asynchronous task used to set the foul
-     */
-    private class FoulTask extends AsyncTask<Void, Void, String> {
-
-        private String token;
-        private int teamId;
-        private int totalFouls;
-
-        FoulTask(final String token,
-                 final int teamId,
-                 final int totalFouls) {
-            this.token = token;
-            this.teamId = teamId;
-            this.totalFouls = totalFouls;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            try {
-                return NetworkUtilities.updateFouls(token, isPositive, teamId, totalFouls);
-            } catch (Exception ex) {
-                Log.e(TAG, "FoulTask.doInBackground: failed to set fouls");
-                Log.i(TAG, ex.toString());
-                return null;
-            }
-        }
-    }
-
-    /**
-     * Represents an asynchronous task used to set the quarters
-     */
-    private class QuarterTask extends AsyncTask<Void, Void, String> {
-
-        private int gameId;
-
-        QuarterTask(int gameId) {
-            this.gameId = gameId;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            try {
-                return NetworkUtilities.updateQuarters(authToken, isPositive, gameId);
-            } catch (Exception ex) {
-                return ex.toString();
-            }
-        }
-    }
-
-    /**
-     * Represents an asynchronous task used to set the quarters
-     */
-    private class TimeoutTask extends AsyncTask<Void, Void, String> {
-
-        private int teamId;
-
-        TimeoutTask(int teamId) {
-            this.teamId = teamId;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            try {
-                return NetworkUtilities.incrementTimeout(authToken, teamId);
-            } catch (Exception ex) {
-                Log.e(TAG, "TimeoutTask.doInBackground: failed to set score");
-                Log.i(TAG, ex.toString());
-                return null;
-            }
-        }
-    }
-
-    /**
-     * Represents an asynchronous task used to set the quarters
-     */
-    private class AttentionTask extends AsyncTask<Void, Void, String> {
-
-        AttentionTask() {
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            try {
-                return NetworkUtilities.attention(authToken);
-            } catch (Exception ex) {
-                Log.e(TAG, "AttentionTask.doInBackground: failed to call attention");
-                Log.i(TAG, ex.toString());
-                return null;
-            }
-        }
-    }
-
-    /**
-     * Represents an asynchronous task used to set the clock
-     */
-    private class ClockTask extends AsyncTask<Void, Void, String> {
-
-        static final String ERROR_PROBEER_OPNIEUW = "Error probeer opnieuw - ";
-        private String token;
-        private int gameId;
-        private int seconds;
-        private ClockAction action;
-
-        ClockTask(final String token, final int gameId, final ClockAction action, final int seconds) {
-            this.token = token;
-            this.gameId = gameId;
-            this.action = action;
-            this.seconds = seconds;
-        }
-
-        ClockTask(final String token, final int gameId, final ClockAction action) {
-            this(token, gameId, action, 1);
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            String result;
-            try {
-                result = NetworkUtilities.triggerClock(token, gameId, action, seconds);
-            } catch (IOException ex) {
-                result = NETWORK_PROBLEEM_PROBEER_OPNIEUW + " \n " + ex.toString();
-            } catch (Exception ex) {
-                result = ERROR_PROBEER_OPNIEUW + ex.toString();
-            }
-
-            return result;
-        }
     }
 }

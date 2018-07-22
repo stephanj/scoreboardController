@@ -5,7 +5,7 @@ package org.janssen.scoreboard.comms;
  *
  * Created by stephan on 16/06/13.
  */
-enum RestURI {
+public enum RestURI {
 
     // Ping
     PING("http://%s"),

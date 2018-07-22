@@ -1,8 +1,9 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/action_new_game"
           android:title="@string/action_newGame"
           android:orderInCategory="100"
-          android:showAsAction="never" />
+        app:showAsAction="never" />
 
     <!--<item android:id="@+id/action_publish"-->
           <!--android:title="@string/action_publish"-->
@@ -12,20 +13,20 @@
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="110"
-        android:showAsAction="never" />
+        app:showAsAction="never" />
 
     <item android:id="@+id/action_redraw"
           android:title="@string/action_redraw"
           android:orderInCategory="120"
-          android:showAsAction="never" />
+          app:showAsAction="never" />
 
     <item android:id="@+id/action_turnoff"
         android:title="@string/action_turnoff"
         android:orderInCategory="130"
-        android:showAsAction="never" />
+        app:showAsAction="never" />
 
     <item android:id="@+id/action_about"
           android:title="@string/action_about"
           android:orderInCategory="140"
-          android:showAsAction="never" />
+          app:showAsAction="never" />
 </menu>
